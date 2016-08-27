@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=bank_management',
 ]
 
 ROOT_URLCONF = 'bank_management.urls'
