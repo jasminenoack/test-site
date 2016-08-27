@@ -4,7 +4,7 @@
   "description": "An account management app for a bank",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover _mocha assets",
+    "test": "jest --verbose",
     "test:watch": "npm run test --watch",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch"
@@ -21,7 +21,9 @@
   "homepage": "https://github.com/jasminenoack/test-site#readme",
   "devDependencies": {
     "babel": "^6.5.2",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
+    "babel-jest": "^14.1.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-transform-object-assign": "6.3.13",
     "babel-preset-es2015": "6.3.13",
@@ -32,7 +34,8 @@
     "immutable": "3.7.5",
     "isomorphic-fetch": "^2.2.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
+    "jest-cli": "^14.1.0",
+    "jsdom": "^9.4.2",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",
@@ -52,5 +55,9 @@
     "plugins": [
       "transform-object-assign"
     ]
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "collectCoverage": true
   }
 }
