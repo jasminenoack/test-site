@@ -55,7 +55,7 @@ MIDDLEWARE = [
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=bank_management,home',
+    '--cover-package=bank_management,home,auth',
 ]
 
 ROOT_URLCONF = 'bank_management.urls'

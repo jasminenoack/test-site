@@ -3,8 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>MGR Bank</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/picnicss/6.1.4/picnic.min.css" crossorigin="anonymous">
     </head>
     <body>
+        {% csrf_token %}
         <div id="outer_container"></div>
         {% load render_bundle from webpack_loader %}
         {% render_bundle 'main' %}

@@ -29,7 +29,7 @@ index e69de29..d269cf8 100644
 +  - "**.php"
 +  - "**.py"
 +  - "**.rb"
-+exclude_paths: []
++exclude_paths: [assets/bundles]
 diff --git a/.csslintrc b/.csslintrc
 index e69de29..aacba95 100644
 --- a/.csslintrc

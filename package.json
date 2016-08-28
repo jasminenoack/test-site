@@ -4,7 +4,7 @@
   "description": "An account management app for a bank",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose assets/js",
     "test:watch": "npm run test --watch",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch"
@@ -35,8 +35,12 @@
     "isomorphic-fetch": "^2.2.1",
     "istanbul": "^0.4.5",
     "jest-cli": "^14.1.0",
+    "jquery": "^3.1.0",
     "jsdom": "^9.4.2",
+    "mock-fetch": "^1.0.0",
     "react": "^15.3.1",
+    "react-addons-test-utils": "^15.3.1",
+    "react-cookie": "^0.4.8",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",
     "react-router": "^2.7.0",
@@ -58,6 +62,12 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/chai",
+      "<rootDir>/node_modules/chai-immutable",
+      "<rootDir>/node_modules/immutable"
+    ]
   }
 }
