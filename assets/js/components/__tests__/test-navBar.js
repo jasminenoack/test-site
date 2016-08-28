@@ -57,6 +57,30 @@ describe('navBar', function() {
             expect(hiddenButton.length).not.to.be.ok;
         });
 
+        it('should link to users if teller', function() {
+            component = TestUtils.renderIntoDocument(
+                <NavBar
+                    userData={{isTeller: true}}
+                    logout={() => {}}
+                    login={() => {}}
+                    error=""/>
+            );
+            let button = TestUtils.findRenderedDOMComponentWithClass(component, "users");
+            expect(button).to.be.ok;
+        });
+
+        it('should not link to users if not teller', function() {
+            component = TestUtils.renderIntoDocument(
+                <NavBar
+                    userData={{isTeller: false}}
+                    logout={() => {}}
+                    login={() => {}}
+                    error=""/>
+            );
+            let hiddenButton = TestUtils.scryRenderedDOMComponentsWithClass(component, "users");
+            expect(hiddenButton.length).not.to.be.ok;
+        });
+
         it('should render create user for tellers', function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar

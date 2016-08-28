@@ -13,8 +13,8 @@ class NavBar extends React.Component{
         return (
             <div>
                 <nav>
-                    <a href="#" className="brand">{this.props.userData.username}</a>
-                    <div className="menu">
+                    <Link to="/" className="brand">{this.props.userData.username}</Link>
+                    <div>
                         {
                             this.props.userData.isTeller
                             ?
@@ -41,6 +41,16 @@ class NavBar extends React.Component{
                                     htmlFor="modal_1">
                                         Sign In
                                 </label>
+                        }
+                        {
+                            this.props.userData.isTeller
+                            ?
+                                <Link
+                                    to="/view/users/"
+                                    className="pseudo button users">
+                                        Users
+                                </Link>
+                            : null
                         }
                     </div>
                 </nav>

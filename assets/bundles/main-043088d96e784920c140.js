@@ -66,7 +66,7 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _configureStore = __webpack_require__(279);
+	var _configureStore = __webpack_require__(281);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -83,7 +83,8 @@
 	                return window.scrollTo(0, 0);
 	            }, history: history },
 	        _react2.default.createElement(_reactRouter.Route, { path: "/", component: _app2.default }),
-	        _react2.default.createElement(_reactRouter.Route, { path: "create/", component: _app2.default })
+	        _react2.default.createElement(_reactRouter.Route, { path: "create/", component: _app2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: "create/account", component: _app2.default })
 	    )
 	), document.getElementById("outer_container"));
 
@@ -29216,6 +29217,14 @@
 
 	var _create2 = _interopRequireDefault(_create);
 
+	var _accounts = __webpack_require__(279);
+
+	var _accounts2 = _interopRequireDefault(_accounts);
+
+	var _createAccount = __webpack_require__(280);
+
+	var _createAccount2 = _interopRequireDefault(_createAccount);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -29241,7 +29250,9 @@
 	        key: 'getLocation',
 	        value: function getLocation() {
 	            var url = this.props.location.pathname;
-	            if (url.indexOf("create") !== -1 && this.props.userData.isTeller) {
+	            if (url.indexOf("create/account") !== -1 && this.props.userData.isTeller) {
+	                return "createAccount";
+	            } else if (url.indexOf("create") !== -1 && this.props.userData.isTeller) {
 	                // If the user went to create and the user had permission
 	                return "create";
 	            } else if (url.indexOf("create") !== -1) {
@@ -29269,6 +29280,23 @@
 	                    { className: 'authenticate-section' },
 	                    React.createElement(_authenticate2.default, null)
 	                );
+	            } else if (current_location === "createAccount") {
+	                subSection = React.createElement(
+	                    'div',
+	                    { className: 'create-account-section' },
+	                    React.createElement(_createAccount2.default, {
+	                        createAccount: this.props.createAccount,
+	                        users: this.props.users,
+	                        error: this.props.error })
+	                );
+	            } else {
+	                subSection = React.createElement(
+	                    'div',
+	                    { className: 'accounts-section' },
+	                    React.createElement(_accounts2.default, {
+	                        accounts: this.props.accounts,
+	                        userData: this.props.userData })
+	                );
 	            }
 
 	            return React.createElement(
@@ -29288,6 +29316,20 @@
 	        value: function componentDidMount() {
 	            // once the component mounts request the user's data from the server
 	            this.props.getUserData();
+	            this.props.getAccounts(this.props.userData.isTeller);
+	            if (this.props.userData.isTeller) {
+	                this.props.getUsers();
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (this.props.userData.isTeller !== nextProps.userData.isTeller) {
+	                this.props.getAccounts(nextProps.userData.isTeller);
+	                if (nextProps.userData.isTeller) {
+	                    this.props.getUsers();
+	                }
+	            }
 	        }
 	    }]);
 
@@ -29302,13 +29344,20 @@
 	    login: React.PropTypes.func.isRequired,
 	    logout: React.PropTypes.func.isRequired,
 	    error: React.PropTypes.string.isRequired,
-	    create: React.PropTypes.func.isRequired
+	    create: React.PropTypes.func.isRequired,
+	    getAccounts: React.PropTypes.func.isRequired,
+	    accounts: React.PropTypes.array.isRequired,
+	    createAccount: React.PropTypes.func.isRequired,
+	    getUsers: React.PropTypes.func.isRequired,
+	    users: React.PropTypes.array.isRequired
 	};
 
 	function mapStateToProps(state) {
 	    return {
 	        userData: state.default.get('userData').toJS(),
-	        error: state.default.get('error')
+	        error: state.default.get('error'),
+	        accounts: state.default.get('accounts').toJS(),
+	        users: state.default.get('users').toJS()
 	    };
 	};
 
@@ -29323,7 +29372,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.create = exports.login = exports.logout = exports.getUserData = undefined;
+	exports.createAccount = exports.getUsers = exports.getAccounts = exports.create = exports.login = exports.logout = exports.getUserData = undefined;
 
 	var _isomorphicFetch = __webpack_require__(270);
 
@@ -29344,8 +29393,8 @@
 	var fetchOptions = {
 	    credentials: 'same-origin',
 	    headers: {
-	        'X-CSRF-Token': _reactCookie2.default.load("csrftoken"),
-	        'Content-Type': 'application/json'
+	        'Content-Type': 'application/json',
+	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
 	    }
 	};
 
@@ -29369,14 +29418,18 @@
 	    };
 	};
 
-	var postUser = function postUser(dispatch, endpoint, data, _error) {
+	var postData = function postData(dispatch, endpoint, data, _error, callback) {
 	    // We are using ajax because cookies are not consistent
 	    // in the fetch polyfills.
 	    _jquery2.default.ajax({
 	        type: "POST",
 	        url: endpoint,
 	        data: JSON.stringify(data),
+	        headers: { "X-CSRFToken": _reactCookie2.default.load('csrftoken') },
 	        success: function success(response) {
+	            if (callback) {
+	                return callback();
+	            }
 	            return dispatch(getUserData());
 	        },
 	        error: function error() {
@@ -29390,13 +29443,50 @@
 
 	var login = exports.login = function login(data) {
 	    return function (dispatch) {
-	        postUser(dispatch, '/users/login', data, "Login failed please try again");
+	        postData(dispatch, '/users/login', data, "Login failed please try again");
 	    };
 	};
 
 	var create = exports.create = function create(data) {
 	    return function (dispatch) {
-	        postUser(dispatch, '/users/create', data, "Create failed please try again");
+	        postData(dispatch, '/users/create', data, "Create failed please try again");
+	    };
+	};
+
+	var getAccounts = exports.getAccounts = function getAccounts(manage) {
+	    var url = void 0;
+	    if (manage) {
+	        url = '/accounts/manage/';
+	    } else {
+	        url = '/accounts/';
+	    }
+	    return function (dispatch) {
+	        (0, _isomorphicFetch2.default)(url, fetchOptions).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            return dispatch({ type: _actionConstants.ACTIONS.GET_ACCOUNTS, data: json });
+	        });
+	    };
+	};
+
+	var getUsers = exports.getUsers = function getUsers() {
+	    var url = '/users/index/';
+	    return function (dispatch, getState) {
+	        (0, _isomorphicFetch2.default)(url, fetchOptions).then(function (response) {
+	            return response.json();
+	        }).then(function (json) {
+	            return dispatch({ type: _actionConstants.ACTIONS.GET_USERS, data: json });
+	        }).catch(function (err) {
+	            return dispatch({ type: _actionConstants.ACTIONS.GET_USERS, data: [] });
+	        });
+	    };
+	};
+
+	var createAccount = exports.createAccount = function createAccount(data) {
+	    return function (dispatch, getState) {
+	        postData(dispatch, '/accounts/', data, "Create account failed", function () {
+	            dispatch(getAccounts(getState().default.getIn(['userData', 'isTeller'])));
+	        });
 	    };
 	};
 
@@ -29862,7 +29952,9 @@
 	});
 	var ACTIONS = exports.ACTIONS = {
 	    GET_USER_DATA: "getUserData",
-	    ERROR: "error"
+	    ERROR: "error",
+	    GET_ACCOUNTS: "getAccounts",
+	    GET_USERS: "getUsers"
 	};
 
 /***/ },
@@ -40309,13 +40401,13 @@
 	                    "nav",
 	                    null,
 	                    _react2.default.createElement(
-	                        "a",
-	                        { href: "#", className: "brand" },
+	                        _reactRouter.Link,
+	                        { to: "/", className: "brand" },
 	                        this.props.userData.username
 	                    ),
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "menu" },
+	                        null,
 	                        this.props.userData.isTeller ? _react2.default.createElement(
 	                            _reactRouter.Link,
 	                            {
@@ -40337,7 +40429,14 @@
 	                                className: "pseudo button login",
 	                                htmlFor: "modal_1" },
 	                            "Sign In"
-	                        )
+	                        ),
+	                        this.props.userData.isTeller ? _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            {
+	                                to: "/view/users/",
+	                                className: "pseudo button users" },
+	                            "Users"
+	                        ) : null
 	                    )
 	                ),
 	                !this.props.userData.loggedIn ? _react2.default.createElement(
@@ -40586,7 +40685,7 @@
 	                                    return that.firstName = _ref;
 	                                },
 	                                className: "create-first-name",
-	                                placeholder: "firstName"
+	                                placeholder: "first name"
 	                            })
 	                        ),
 	                        _react2.default.createElement(
@@ -40599,7 +40698,7 @@
 	                                    return that.lastName = _ref2;
 	                                },
 	                                className: "create-last-name",
-	                                placeholder: "lastName"
+	                                placeholder: "last name"
 	                            })
 	                        ),
 	                        _react2.default.createElement(
@@ -40612,7 +40711,7 @@
 	                                    return that.username = _ref3;
 	                                },
 	                                className: "create-username",
-	                                placeholder: "Username"
+	                                placeholder: "username"
 	                            })
 	                        ),
 	                        _react2.default.createElement(
@@ -40625,7 +40724,7 @@
 	                                    return that.email = _ref4;
 	                                },
 	                                className: "create-email",
-	                                placeholder: "Email"
+	                                placeholder: "email"
 	                            })
 	                        ),
 	                        _react2.default.createElement(
@@ -40742,16 +40841,355 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.Accounts = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(200);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Accounts = exports.Accounts = function (_React$Component) {
+	    _inherits(Accounts, _React$Component);
+
+	    function Accounts() {
+	        _classCallCheck(this, Accounts);
+
+	        return _possibleConstructorReturn(this, (Accounts.__proto__ || Object.getPrototypeOf(Accounts)).apply(this, arguments));
+	    }
+
+	    _createClass(Accounts, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                {
+	                    style: { minWidth: 400, margin: "auto", textAlign: "center" },
+	                    className: "half" },
+	                this.props.userData.isTeller ? _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: "/create/account", className: "create-account pseudo button" },
+	                    "Create Account"
+	                ) : null,
+	                this.props.accounts.map(function (account) {
+	                    return _react2.default.createElement(
+	                        "article",
+	                        { className: "card account", key: account.id },
+	                        _react2.default.createElement(
+	                            "header",
+	                            null,
+	                            _react2.default.createElement(
+	                                "h3",
+	                                null,
+	                                account.name
+	                            ),
+	                            _react2.default.createElement(
+	                                "h4",
+	                                null,
+	                                "Owner: ",
+	                                account.user.username
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            "footer",
+	                            null,
+	                            _react2.default.createElement(
+	                                "table",
+	                                { className: "primary", style: { margin: "auto" } },
+	                                _react2.default.createElement(
+	                                    "tbody",
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        "tr",
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            "Balance:"
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            account.balance
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "tr",
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            "Account Number:"
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            account.id
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "tr",
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            "Address:"
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            account.address
+	                                        )
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "tr",
+	                                        null,
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            "Phone Number:"
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "td",
+	                                            null,
+	                                            account.phone_number
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    );
+	                })
+	            );
+	        }
+	    }]);
+
+	    return Accounts;
+	}(_react2.default.Component);
+
+	;
+
+	Accounts.propTypes = {
+	    accounts: _react2.default.PropTypes.array.isRequired,
+	    userData: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = Accounts;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CreateAccount = function (_React$Component) {
+	    _inherits(CreateAccount, _React$Component);
+
+	    function CreateAccount(props) {
+	        _classCallCheck(this, CreateAccount);
+
+	        var _this = _possibleConstructorReturn(this, (CreateAccount.__proto__ || Object.getPrototypeOf(CreateAccount)).call(this, props));
+
+	        _this.state = {
+	            error: ""
+	        };
+	        _this.create = _this.create.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(CreateAccount, [{
+	        key: "render",
+	        value: function render() {
+	            var that = this;
+	            return _react2.default.createElement(
+	                "form",
+	                { className: "half", style: { margin: "auto" } },
+	                _react2.default.createElement(
+	                    "article",
+	                    null,
+	                    _react2.default.createElement(
+	                        "header",
+	                        null,
+	                        _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Create Account"
+	                        )
+	                    ),
+	                    this.props.error && this.state.error || this.props.error.toLowerCase().indexOf("create") !== -1 ? _react2.default.createElement(
+	                        "span",
+	                        {
+	                            style: { margin: 0 },
+	                            className: "label error" },
+	                        this.state.error || this.props.error
+	                    ) : null,
+	                    this.state.status ? _react2.default.createElement(
+	                        "span",
+	                        {
+	                            style: { margin: 0 },
+	                            className: "label success" },
+	                        this.state.status
+	                    ) : null,
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "full", style: { margin: "auto" } },
+	                        _react2.default.createElement(
+	                            "label",
+	                            null,
+	                            " Name: ",
+	                            _react2.default.createElement("input", {
+	                                required: true,
+	                                ref: function ref(_ref) {
+	                                    return that.name = _ref;
+	                                },
+	                                className: "account-name",
+	                                placeholder: "name"
+	                            })
+	                        ),
+	                        _react2.default.createElement(
+	                            "label",
+	                            null,
+	                            "Address: ",
+	                            _react2.default.createElement("input", {
+	                                required: true,
+	                                ref: function ref(_ref2) {
+	                                    return that.address = _ref2;
+	                                },
+	                                className: "account-address",
+	                                placeholder: "address"
+	                            })
+	                        ),
+	                        _react2.default.createElement(
+	                            "label",
+	                            null,
+	                            "Phone Number: ",
+	                            _react2.default.createElement("input", {
+	                                required: true,
+	                                ref: function ref(_ref3) {
+	                                    return that.number = _ref3;
+	                                },
+	                                className: "account-phone-number",
+	                                placeholder: "phone number"
+	                            })
+	                        ),
+	                        _react2.default.createElement(
+	                            "label",
+	                            null,
+	                            "Balance: ",
+	                            _react2.default.createElement("input", {
+	                                required: true,
+	                                ref: function ref(_ref4) {
+	                                    return that.balance = _ref4;
+	                                },
+	                                className: "account-balance",
+	                                placeholder: "balance"
+	                            })
+	                        ),
+	                        _react2.default.createElement(
+	                            "label",
+	                            null,
+	                            "User:",
+	                            _react2.default.createElement(
+	                                "select",
+	                                { className: "account-user", ref: function ref(_ref5) {
+	                                        return that.user = _ref5;
+	                                    } },
+	                                this.props.users.map(function (user) {
+	                                    return _react2.default.createElement(
+	                                        "option",
+	                                        { key: user.id, value: user.id },
+	                                        user.username
+	                                    );
+	                                })
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "a",
+	                        {
+	                            className: "button create-button",
+	                            href: "#",
+	                            onClick: this.create },
+	                        "Create Account"
+	                    )
+	                )
+	            );
+	        }
+	    }, {
+	        key: "create",
+	        value: function create() {
+	            var data = {
+	                name: this.name.value,
+	                balance: this.balance.value,
+	                address: this.address.value,
+	                phoneNumber: this.number.value,
+	                user: this.user.value
+	            };
+	            this.props.createAccount(data);
+	            this.setState({ status: "Creating Account: " + data.name });
+	        }
+	    }]);
+
+	    return CreateAccount;
+	}(_react2.default.Component);
+
+	;
+
+	CreateAccount.propTypes = {
+	    createAccount: _react2.default.PropTypes.func.isRequired,
+	    error: _react2.default.PropTypes.string.isRequired,
+	    users: _react2.default.PropTypes.array.isRequired
+	};
+
+	exports.default = CreateAccount;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _reducer = __webpack_require__(280);
+	var _reducer = __webpack_require__(282);
 
 	var reducers = _interopRequireWildcard(_reducer);
 
 	var _redux = __webpack_require__(172);
 
-	var _reduxThunk = __webpack_require__(282);
+	var _reduxThunk = __webpack_require__(284);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -40761,19 +41199,12 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	// const finalCreateStore = compose(
-	//     applyMiddleware(
-	//         thunkMiddleware
-	//     ),
-	//     window.devToolsExtension && environmentName !== "Production" ? window.devToolsExtension() : f => f
-	// )(createStore);
-
 	var store = (0, _redux.createStore)((0, _redux.combineReducers)(_extends({}, reducers, { routing: _reactRouterRedux.routerReducer })), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	exports.default = store;
 
 /***/ },
-/* 280 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40782,7 +41213,7 @@
 	    value: true
 	});
 
-	var _immutable = __webpack_require__(281);
+	var _immutable = __webpack_require__(283);
 
 	var _immutable2 = _interopRequireDefault(_immutable);
 
@@ -40792,7 +41223,9 @@
 
 	var initialState = _immutable2.default.fromJS({
 	    userData: { loggedIn: false },
-	    error: ""
+	    error: "",
+	    accounts: [],
+	    users: []
 	});
 
 	var setUserData = function setUserData(state, data) {
@@ -40801,6 +41234,14 @@
 
 	var setError = function setError(state, error) {
 	    return state.set("error", error);
+	};
+
+	var setAccounts = function setAccounts(state, accounts) {
+	    return state.set("accounts", _immutable2.default.fromJS(accounts));
+	};
+
+	var setUsers = function setUsers(state, users) {
+	    return state.set("users", _immutable2.default.fromJS(users));
 	};
 
 	exports.default = function () {
@@ -40814,12 +41255,16 @@
 	            return setUserData(state, action.data);
 	        case _actionConstants.ACTIONS.ERROR:
 	            return setError(state, action.data);
+	        case _actionConstants.ACTIONS.GET_ACCOUNTS:
+	            return setAccounts(state, action.data);
+	        case _actionConstants.ACTIONS.GET_USERS:
+	            return setUsers(state, action.data);
 	    }
 	    return state;
 	};
 
 /***/ },
-/* 281 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45784,7 +46229,7 @@
 	}));
 
 /***/ },
-/* 282 */
+/* 284 */
 /***/ function(module, exports) {
 
 	'use strict';

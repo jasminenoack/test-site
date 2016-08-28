@@ -31,6 +31,7 @@
     "babel-preset-stage-2": "6.3.13",
     "chai": "^3.5.0",
     "chai-immutable": "^1.6.0",
+    "enzyme": "^2.4.1",
     "immutable": "3.7.5",
     "isomorphic-fetch": "^2.2.1",
     "istanbul": "^0.4.5",
@@ -67,7 +68,8 @@
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/chai",
       "<rootDir>/node_modules/chai-immutable",
-      "<rootDir>/node_modules/immutable"
+      "<rootDir>/node_modules/immutable",
+      "<rootDir>/node_modules/enzyme"
     ]
   }
 }

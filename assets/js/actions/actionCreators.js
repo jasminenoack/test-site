@@ -6,8 +6,8 @@ import $ from 'jquery';
 const fetchOptions = {
     credentials: 'same-origin',
     headers: {
-        'X-CSRF-Token': cookie.load("csrftoken"),
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRFToken': cookie.load('csrftoken')
     },
 }
 
@@ -31,14 +31,18 @@ export const logout = () => {
     };
 };
 
-const postUser = (dispatch, endpoint, data, error) => {
+const postData = (dispatch, endpoint, data, error, callback) => {
     // We are using ajax because cookies are not consistent
     // in the fetch polyfills.
     $.ajax({
         type:"POST",
         url: endpoint,
         data: JSON.stringify(data),
+        headers: {"X-CSRFToken": cookie.load('csrftoken')},
         success: function(response){
+            if (callback) {
+                return callback();
+            }
             return dispatch(getUserData())
         },
         error: () => {
@@ -52,7 +56,7 @@ const postUser = (dispatch, endpoint, data, error) => {
 
 export const login = (data) => {
     return dispatch => {
-        postUser(
+        postData(
             dispatch,
             '/users/login',
             data,
@@ -63,11 +67,58 @@ export const login = (data) => {
 
 export const create = (data) => {
     return dispatch => {
-        postUser(
+        postData(
             dispatch,
             '/users/create',
             data,
             "Create failed please try again"
+        );
+    };
+};
+
+export const getAccounts = (manage) => {
+    let url;
+    if (manage) {
+        url = '/accounts/manage/';
+    } else {
+        url = '/accounts/';
+    }
+    return dispatch => {
+        fetch(url, fetchOptions).then(
+            response => response.json()
+        ).then(
+            json => dispatch({type: ACTIONS.GET_ACCOUNTS, data: json})
+        );
+    };
+};
+
+export const getUsers = () => {
+    let url = '/users/index/';
+    return (dispatch, getState) => {
+        fetch(url, fetchOptions).then(
+            response => response.json()
+        ).then(
+            json => dispatch({type: ACTIONS.GET_USERS, data: json})
+        ).catch(
+            err => dispatch({type: ACTIONS.GET_USERS, data: []})
+        );
+    };
+};
+
+export const createAccount = (data) => {
+    return (dispatch, getState) => {
+        postData(
+            dispatch,
+            '/accounts/',
+            data,
+            "Create account failed",
+            () => {
+                dispatch(
+                    getAccounts(
+                        getState().default.getIn(['userData', 'isTeller'])
+                    )
+                );
+            }
         );
     };
 };

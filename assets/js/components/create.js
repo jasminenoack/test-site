@@ -46,25 +46,25 @@ class Create extends React.Component{
                             required
                             ref={(ref) => that.firstName = ref}
                             className="create-first-name"
-                            placeholder="firstName"
+                            placeholder="first name"
                         /></label>
                         <label>Last Name: <input
                             required
                             ref={(ref) => that.lastName = ref}
                             className="create-last-name"
-                            placeholder="lastName"
+                            placeholder="last name"
                         /></label>
                         <label>Username: <input
                             required
                             ref={(ref) => that.username = ref}
                             className="create-username"
-                            placeholder="Username"
+                            placeholder="username"
                         /></label>
                         <label>Email: <input
                             required
                             ref={(ref) => that.email = ref}
                             className="create-email"
-                            placeholder="Email"
+                            placeholder="email"
                         /></label>
                         <label>Password: <input
                             required

@@ -1,11 +1,12 @@
 '''
 Tests for the auth views.
 '''
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from django.contrib.auth.models import AnonymousUser, User
-from unittest.mock import patch
 
 from auth.views import data
 from bank_management.utils import decode_json_content
@@ -17,8 +18,9 @@ class MockRequest(object):
     '''
     A fake request with an attached user.
     '''
-    def __init__(self, user):
+    def __init__(self, user, method="get"):
         self.user = user
+        self.method = method
 
 class DataViewTest(TestCase):
     '''
@@ -28,7 +30,7 @@ class DataViewTest(TestCase):
         '''
         A request should return a 200
         '''
-        response = CLIENT.get(reverse('home:base'))
+        response = CLIENT.get(reverse('users:data'))
         self.assertEqual(response.status_code, 200)
 
     def test_it_returns_data_if_no_user(self):
@@ -431,4 +433,34 @@ class CreateUser(TestCase):
         }
         self.mock.return_value = False
         response = CLIENT.post(reverse('users:create'))
+        self.assertEqual(response.status_code, 403)
+
+class TestUsersView(TestCase):
+    '''
+    Test users index view
+    '''
+    def setUp(self):
+        self.client = Client()
+
+    @patch('auth.permissions.teller_permission', return_value=True)
+    def test_teller_can_view_users(self, mock_permission):
+        '''
+        Teller can view users
+        '''
+        user = User.objects.create_user(
+            'john',
+            'lennon@thebeatles.com',
+            'johnpassword'
+        )
+        response = self.client.get(
+            reverse('users:index')
+        )
+        self.assertEqual(response.status_code, 200)
+
+    @patch('auth.permissions.teller_permission', return_value=False)
+    def test_customer_cannot_call(self, mock_permission):
+        '''
+        user list should be forbidden to customers
+        '''
+        response = self.client.get(reverse('users:index'))
         self.assertEqual(response.status_code, 403)

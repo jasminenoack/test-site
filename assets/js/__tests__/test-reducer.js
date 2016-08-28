@@ -32,6 +32,34 @@ describe('Reducer', () => {
         expect(newState).to.equal(expectedState);
     });
 
+    it('handles GET_ACCOUNTS', () => {
+        const state = Immutable.Map();
+        const data = [{id: 1}];
+        const newState = reducer(state, {
+            type: ACTIONS.GET_ACCOUNTS,
+            data: data
+        });
+        const expectedState = Immutable.fromJS({
+            accounts: data,
+            error: "",
+        });
+        expect(newState).to.equal(expectedState);
+    });
+
+    it('handles GET_USERS', () => {
+        const state = Immutable.Map();
+        const data = [{id: 1}];
+        const newState = reducer(state, {
+            type: ACTIONS.GET_USERS,
+            data: data
+        });
+        const expectedState = Immutable.fromJS({
+            users: data,
+            error: "",
+        });
+        expect(newState).to.equal(expectedState);
+    });
+
     it('handles ERROR', () => {
         const state = Immutable.Map();
         const data = "error";

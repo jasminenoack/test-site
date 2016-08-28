@@ -86,4 +86,79 @@ describe('User actions', function() {
             expect($.ajax.mock.calls[0][0].url).to.equal("/users/create");
         });
     });
+
+    describe('getAccounts', function() {
+        const {getAccounts} = require('../actionCreators');
+
+        it('should get index', function() {
+            fetch.mockClear();
+            fetch.mockReturnValueOnce(
+                new Promise((resolve, reject) => {resolve(
+                    {}
+                )})
+            );
+            const dispatchFunction = getAccounts();
+            dispatchFunction();
+            expect(fetch.mock.calls.length).to.equal(1);
+            expect(fetch.mock.calls[0][0]).to.equal("/accounts/");
+        });
+
+        it('should get manage', function() {
+            fetch.mockClear();
+            fetch.mockReturnValueOnce(
+                new Promise((resolve, reject) => {resolve(
+                    {}
+                )})
+            );
+            const dispatchFunction = getAccounts(true);
+            dispatchFunction();
+            expect(fetch.mock.calls.length).to.equal(1);
+            expect(fetch.mock.calls[0][0]).to.equal("/accounts/manage/");
+        });
+    });
+
+    describe('getUsers', function() {
+        const {getUsers} = require('../actionCreators');
+
+        it('should get index', function() {
+            fetch.mockClear();
+            fetch.mockReturnValueOnce(
+                new Promise((resolve, reject) => {resolve(
+                    {}
+                )})
+            );
+            const dispatchFunction = getUsers();
+            dispatchFunction();
+            expect(fetch.mock.calls.length).to.equal(1);
+            expect(fetch.mock.calls[0][0]).to.equal("/users/index/");
+        });
+
+        it('should handle an error', function() {
+            fetch.mockClear();
+            fetch.mockReturnValueOnce(
+                new Promise((resolve, reject) => {
+                    throw Error;
+                })
+            );
+            const dispatchFunction = getUsers();
+            dispatchFunction();
+        });
+    });
+
+    describe('createAccount', function() {
+        const {createAccount} = require('../actionCreators');
+
+        it('should create account', function() {
+            $.ajax.mockClear();
+            $.ajax.mockReturnValueOnce(
+                new Promise((resolve, reject) => {resolve(
+                    {json: {loggedIn: true}}
+                )})
+            );
+            const dispatchFunction = createAccount();
+            dispatchFunction();
+            expect($.ajax.mock.calls.length).to.equal(1);
+            expect($.ajax.mock.calls[0][0].url).to.equal("/accounts/");
+        });
+    });
 });

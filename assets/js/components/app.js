@@ -4,14 +4,21 @@ import * as actionCreators from '../actions/actionCreators';
 import NavBar from './navBar';
 import Authenticate from './authenticate';
 import Create from './create';
+import Accounts from './accounts';
+import CreateAccount from './createAccount';
+import Users from './users';
 
 export class App extends React.Component{
     getLocation() {
         const url = this.props.location.pathname
-        if (url.indexOf("create") !== -1 && this.props.userData.isTeller) {
+        if(url.indexOf("create/account") !== -1 && this.props.userData.isTeller) {
+            return "createAccount";
+        } else if(url.indexOf("create") !== -1 && this.props.userData.isTeller) {
             // If the user went to create and the user had permission
             return "create";
-        } else if (url.indexOf("create") !== -1) {
+        } else if (url.indexOf("users") !== -1 && this.props.userData.isTeller) {
+            return "users";
+        } else if (url.indexOf("create") !== -1 || url.indexOf("create") !== -1) {
             // The user went to a url he didn't have permissions for.
             return "authenticate";
         }
@@ -31,6 +38,29 @@ export class App extends React.Component{
             );
         } else if (current_location === "authenticate") {
             subSection = <div className="authenticate-section"><Authenticate/></div>;
+        } else if (current_location === "createAccount") {
+            subSection = (
+                <div className="create-account-section">
+                    <CreateAccount
+                        createAccount={this.props.createAccount}
+                        users={this.props.users}
+                        error={this.props.error}/>
+                </div>
+            );
+        } else if (current_location === "users") {
+            subSection = (
+                <div className="users-section">
+                    <Users users={this.props.users} userData={this.props.userData}/>
+                </div>
+            );
+        } else {
+            subSection = (
+                <div className="accounts-section">
+                    <Accounts
+                        accounts={this.props.accounts}
+                        userData={this.props.userData}/>
+                </div>
+            );
         }
 
         return (
@@ -49,7 +79,20 @@ export class App extends React.Component{
     componentDidMount() {
         // once the component mounts request the user's data from the server
         this.props.getUserData();
+        this.props.getAccounts(this.props.userData.isTeller);
+        if (this.props.userData.isTeller) {
+            this.props.getUsers();
+        }
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.userData.isTeller !== nextProps.userData.isTeller) {
+            this.props.getAccounts(nextProps.userData.isTeller)
+            if (nextProps.userData.isTeller) {
+                this.props.getUsers();
+            }
+        }
+    }
 };
 
 App.propTypes = {
@@ -59,12 +102,19 @@ App.propTypes = {
     logout: React.PropTypes.func.isRequired,
     error: React.PropTypes.string.isRequired,
     create: React.PropTypes.func.isRequired,
+    getAccounts: React.PropTypes.func.isRequired,
+    accounts: React.PropTypes.array.isRequired,
+    createAccount: React.PropTypes.func.isRequired,
+    getUsers: React.PropTypes.func.isRequired,
+    users: React.PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {
     return {
         userData: state.default.get('userData').toJS(),
         error: state.default.get('error'),
+        accounts: state.default.get('accounts').toJS(),
+        users: state.default.get('users').toJS(),
     };
 };
 

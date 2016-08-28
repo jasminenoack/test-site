@@ -12,18 +12,30 @@ from auth.permissions import (
     has_teller_permission,
     PERMISSION_CLASSES
 )
+from auth.serialize import serialize_users
+
+@has_teller_permission
+def users_index(request):
+    return JsonResponse(
+        serialize_users(User.objects.order_by("username").all()),
+        status=200,
+        safe=False
+    )
 
 def data(request):
     """
     Get Data on a user.
     """
     user = request.user
-    return JsonResponse({
-        "loggedIn": not user.is_anonymous(),
-        "username": user.username,
-        "isManager": manager_permission(user),
-        "isTeller": teller_permission(user)
-    })
+    return JsonResponse(
+        {
+            "loggedIn": not user.is_anonymous(),
+            "username": user.username,
+            "isManager": manager_permission(user),
+            "isTeller": teller_permission(user)
+        },
+        status=200
+    )
 
 
 @csrf_exempt
