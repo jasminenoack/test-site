@@ -7,3 +7,6 @@ db.sqlite3
 node_modules
 /coverage
 mydatabase
+npm-debug.log
+htmlcov
+*,cover

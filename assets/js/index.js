@@ -14,6 +14,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router onUpdate={() => window.scrollTo(0, 0)} history={history}>
             <Route path="/" component={App}/>
+            <Route path="create/" component={App}/>
     	</Router>
   	</Provider>,
   document.getElementById("outer_container")

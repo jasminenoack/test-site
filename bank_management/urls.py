@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    # All routes that are not otherwise used should load the base page
+    url(r'^users/', include('auth.urls')),
+    # Otherwise all routes should load the base page
     url(r'.*', include('home.urls')),
 ]
