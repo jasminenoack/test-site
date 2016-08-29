@@ -22,45 +22,39 @@ export class Accounts extends React.Component{
                 {
                     this.props.accounts.map((account) => {
                         return (
-                            <article className="card account" key={account.id}>
-                                <header>
-                                    <h3>{account.name}</h3>
-                                    <h4>Owner: {account.user.username}</h4>
-                                </header>
-                                <footer>
-                                    <table className="primary" style={{margin: "auto"}}>
-                                        <tbody>
-                                            <tr>
-                                                <td>Balance:</td>
-                                                <td>{account.balance}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Number:</td>
-                                                <td>{account.id}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Address:</td>
-                                                <td>{account.address}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Phone Number:</td>
-                                                <td>{account.phone_number}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Transactions:</td>
-                                                <td>{(account.transactions || []).map((transaction) => {
-                                                    let withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
-                                                    return (
-                                                        <h6 className="transaction" key={transaction.id} style={ withdrawal ? {color: "red"} : {color: "blue"}}>
-                                                            {transaction.transactionType}:{transaction.amount}
-                                                        </h6>
-                                                    );
-                                                })}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </footer>
-                            </article>
+                            <Link to={`/view/accounts/${account.id}`}>
+                                <article className="card account" key={account.id}>
+                                    <header>
+                                        <h3>{account.name}</h3>
+                                        <h4>Owner: {account.user.username}</h4>
+                                    </header>
+                                    <footer>
+                                        <table className="primary" style={{margin: "auto"}}>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Balance:</td>
+                                                    <td>{account.balance}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Account Number:</td>
+                                                    <td>{account.id}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Transactions:</td>
+                                                    <td>{(account.transactions || []).map((transaction) => {
+                                                        let withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
+                                                        return (
+                                                            <h6 className="transaction" key={transaction.id} style={ withdrawal ? {color: "red"} : {color: "blue"}}>
+                                                                {transaction.transactionType}:{transaction.amount}
+                                                            </h6>
+                                                        );
+                                                    })}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </footer>
+                                </article>
+                            </Link>
                         );
                     })
                 }

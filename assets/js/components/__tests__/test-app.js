@@ -118,6 +118,30 @@ describe('App', function() {
             expect(section).to.be.ok;
         });
 
+        it('should render view accounts section', function() {
+            const {App} = require('../app');
+            component = TestUtils.renderIntoDocument(
+                <App
+                    getUserData={mockGetData}
+                    userData={{loggedIn: true}}
+                    error=""
+                    getUsers={() => {}}
+                    users={[]}
+                    accounts={[{id: 1}]}
+                    params={{accountId: 1}}
+                    createTransaction={() => {}}
+                    getAccounts={mockGetAccounts}
+                    location={{pathname: "view/accounts/5"}}
+                    create={() => {}}
+                    createAccount={() => {}}
+                    logout={() => {}}
+                    login={() => {}}/>
+            );
+            let section = TestUtils.findRenderedDOMComponentWithClass(component, "view-account-section");
+            expect(section).to.be.ok;
+        });
+
+
         it('should render create create transactions section', function() {
             const {App} = require('../app');
             component = TestUtils.renderIntoDocument(

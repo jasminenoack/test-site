@@ -8,6 +8,7 @@ import Accounts from './accounts';
 import CreateAccount from './createAccount';
 import Users from './users';
 import CreateTransaction from './createTransaction';
+import Account from './account';
 
 export class App extends React.Component{
     getLocation() {
@@ -21,6 +22,8 @@ export class App extends React.Component{
             return "create";
         } else if (url.indexOf("users") !== -1 && this.props.userData.isTeller) {
             return "users";
+        } else if (url.indexOf("view/accounts") !== -1 && this.props.userData.loggedIn) {
+            return "viewAccount";
         } else if (
             // We need to be a teller if
             (
@@ -36,8 +39,22 @@ export class App extends React.Component{
         }
     };
 
+    findAccount(id) {
+        for (let index in this.props.accounts) {
+            if (this.props.accounts[index].id == id) {
+                return this.props.accounts[index];
+            }
+        };
+    };
+
     render() {
-        let subSection;
+        let subSection = (
+            <div className="accounts-section">
+                <Accounts
+                    accounts={this.props.accounts}
+                    userData={this.props.userData}/>
+            </div>
+        );
         const current_location = this.getLocation();
         if(current_location === "create") {
             subSection = (
@@ -76,15 +93,16 @@ export class App extends React.Component{
                     />
                 </div>
             );
-        } else {
-            subSection = (
-                <div className="accounts-section">
-                    <Accounts
-                        accounts={this.props.accounts}
-                        userData={this.props.userData}/>
-                </div>
-            );
-        }
+        } else if (current_location === "viewAccount") {
+            const account = this.findAccount(this.props.params.accountId)
+            if (account) {
+                subSection = (
+                    <div className="view-account-section">
+                        <Account account={account}/>
+                    </div>
+                );
+            }
+        };
 
         return (
             <div>

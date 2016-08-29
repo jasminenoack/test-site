@@ -18,6 +18,7 @@ ReactDOM.render(
             <Route path="create/account" component={App}/>
             <Route path="view/users" component={App}/>
             <Route path="create/transaction" component={App}/>
+            <Route path="view/accounts/:accountId" component={App}/>
     	</Router>
   	</Provider>,
   document.getElementById("outer_container")
