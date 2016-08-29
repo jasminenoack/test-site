@@ -1,26 +1,26 @@
-jest.dontMock('../app');
+jest.dontMock("../app");
 
-describe('App', function() {
+describe("App", function() {
     let React;
     let TestUtils;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
     let mockGetData, mockGetAccounts, mockGetUsers;
-    const {shallow} = require('enzyme');
+    const {shallow} = require("enzyme");
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
     });
 
-    describe('Initial Render', function() {
+    describe("Initial Render", function() {
         beforeEach(function () {
             mockGetData = jest.genMockFunction();
             mockGetAccounts = jest.genMockFunction();
             mockGetUsers = jest.genMockFunction();
 
-            const {App} = require('../app');
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
@@ -39,19 +39,19 @@ describe('App', function() {
             );
         });
 
-        it('should render', function() {
+        it("should render", function() {
             expect(component).to.be.ok;
         });
 
-        it('should trigger the load actions', function() {
+        it("should trigger the load actions", function() {
             expect(mockGetData.mock.calls.length).to.equal(1);
             expect(mockGetAccounts.mock.calls.length).to.equal(1);
             expect(mockGetUsers.mock.calls.length).to.equal(0);
         });
 
 
-        it('should trigger the getAccounts if permissions change', function() {
-            const {App} = require('../app');
+        it("should trigger the getAccounts if permissions change", function() {
+            const {App} = require("../app");
             component = shallow(
                 <App
                     getUserData={mockGetData}
@@ -74,8 +74,8 @@ describe('App', function() {
             expect(mockGetUsers.mock.calls.length).to.equal(1);
         });
 
-        it('should render accounts section', function() {
-            const {App} = require('../app');
+        it("should render accounts section", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
@@ -96,8 +96,8 @@ describe('App', function() {
             expect(section).to.be.ok;
         });
 
-        it('should render create accounts section', function() {
-            const {App} = require('../app');
+        it("should render create accounts section", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
@@ -142,12 +142,12 @@ describe('App', function() {
         });
 
 
-        it('should render create create transactions section', function() {
-            const {App} = require('../app');
+        it("should render create create transactions section", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
-                    userData={{isTeller: true}}
+                    userData={{loggedIn: true}}
                     error=""
                     getUsers={() => {}}
                     users={[]}
@@ -164,8 +164,8 @@ describe('App', function() {
             expect(section).to.be.ok;
         });
 
-        it('should render the create section if appropriate', function() {
-            const {App} = require('../app');
+        it("should render the create section if appropriate", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
@@ -186,8 +186,8 @@ describe('App', function() {
             expect(section).to.be.ok;
         });
 
-        it('should render the users section if appropriate', function() {
-            const {App} = require('../app');
+        it("should render the users section if appropriate", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
@@ -208,8 +208,8 @@ describe('App', function() {
             expect(section).to.be.ok;
         });
 
-        it('should render the authenticate section if appropriate', function() {
-            const {App} = require('../app');
+        it("should render the authenticate section if appropriate", function() {
+            const {App} = require("../app");
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}

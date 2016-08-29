@@ -1,20 +1,20 @@
-jest.dontMock('../create');
+jest.dontMock("../create");
 
-describe('Create', function() {
+describe("Create", function() {
     let React;
     let TestUtils;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
     let Create;
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
-        Create = require('../create').default;
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
+        Create = require("../create").default;
     });
 
-    it('should show form', function() {
+    it("should show form", function() {
         const mockLogin = jest.genMockFunction();
         component = TestUtils.renderIntoDocument(
             <Create create={() => {}} error="" userData={{isManager: true}}/>
@@ -63,7 +63,7 @@ describe('Create', function() {
         expect(role).to.be.ok;
     });
 
-    it('tellers should not see role', function() {
+    it("tellers should not see role", function() {
         const mockLogin = jest.genMockFunction();
         component = TestUtils.renderIntoDocument(
             <Create create={() => {}} error="" userData={{isManager: false}}/>
@@ -77,7 +77,7 @@ describe('Create', function() {
         expect(role.length).not.to.be.ok;
     });
 
-    it('should create', function() {
+    it("should create", function() {
         const mockCreate = jest.genMockFunction();
         component = TestUtils.renderIntoDocument(
             <Create create={mockCreate} error="" userData={{}}/>
@@ -91,7 +91,7 @@ describe('Create', function() {
         expect(mockCreate.mock.calls.length).to.equal(1);
     });
 
-    it('should not create if passwords do not match', function() {
+    it("should not create if passwords do not match", function() {
         const mockCreate = jest.genMockFunction();
         component = TestUtils.renderIntoDocument(
             <Create create={mockCreate} error="" userData={{}}/>

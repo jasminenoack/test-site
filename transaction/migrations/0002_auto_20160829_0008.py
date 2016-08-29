@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='transaction_type',
-            field=models.CharField(db_index=True, default=django.utils.timezone.now, max_length=20),
+            field=models.CharField(db_index=True, default=django.utils.timezone.now, max_length=255),
             preserve_default=False,
         ),
         migrations.AlterField(

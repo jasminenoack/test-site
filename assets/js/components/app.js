@@ -10,12 +10,13 @@ import Users from './users';
 import CreateTransaction from './createTransaction';
 import Account from './account';
 
+
 export class App extends React.Component{
     getLocation() {
-        const url = this.props.location.pathname
+        const url = this.props.location.pathname;
         if(url.indexOf("create/account") !== -1 && this.props.userData.isTeller) {
             return "createAccount";
-        } else if (url.indexOf("create/transaction") !== -1 && this.props.userData.isTeller) {
+        } else if (url.indexOf("create/transaction") !== -1 && this.props.userData.loggedIn) {
             return "createTransaction";
         } else if(url.indexOf("create") !== -1 && this.props.userData.isTeller) {
             // If the user went to create and the user had permission
@@ -37,7 +38,7 @@ export class App extends React.Component{
             // The user went to a url he didn't have permissions for.
             return "authenticate";
         }
-    };
+    }
 
     findAccount(id) {
         for (let index in this.props.accounts) {
@@ -114,8 +115,8 @@ export class App extends React.Component{
                 <div style={{height: 60}}/>
                 {subSection}
             </div>
-        )
-    };
+        );
+    }
 
     componentDidMount() {
         // once the component mounts request the user's data from the server
@@ -124,17 +125,20 @@ export class App extends React.Component{
         if (this.props.userData.isTeller) {
             this.props.getUsers();
         }
-    };
+    }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.userData.isTeller !== nextProps.userData.isTeller) {
-            this.props.getAccounts(nextProps.userData.isTeller)
+        if (
+            this.props.userData.isTeller !== nextProps.userData.isTeller ||
+            this.props.userData.loggedIn !== nextProps.userData.loggedIn
+        ) {
+            this.props.getAccounts(nextProps.userData.isTeller);
             if (nextProps.userData.isTeller) {
                 this.props.getUsers();
             }
         }
     }
-};
+}
 
 App.propTypes = {
     getUserData: React.PropTypes.func.isRequired,
@@ -153,12 +157,12 @@ App.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        userData: state.default.get('userData').toJS(),
-        error: state.default.get('error'),
-        accounts: state.default.get('accounts').toJS(),
-        users: state.default.get('users').toJS(),
+        userData: state.default.get("userData").toJS(),
+        error: state.default.get("error"),
+        accounts: state.default.get("accounts").toJS(),
+        users: state.default.get("users").toJS(),
     };
-};
+}
 
 export default connect(
     mapStateToProps,

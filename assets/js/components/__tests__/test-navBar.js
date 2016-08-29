@@ -1,24 +1,24 @@
-jest.dontMock('../navBar');
+jest.dontMock("../navBar");
 
-describe('navBar', function() {
+describe("navBar", function() {
     let React;
     let TestUtils;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
-    let NavBar
+    let NavBar;
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
     });
 
-    describe('Initial Render', function() {
+    describe("Initial Render", function() {
         beforeEach(function () {
-            NavBar = require('../navBar').default;
+            NavBar = require("../navBar").default;
         });
 
-        it('should render', function() {
+        it("should render", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{loggedIn: false}}
@@ -29,7 +29,7 @@ describe('navBar', function() {
             expect(component).to.be.ok;
         });
 
-        it('should renders a login button if no user', function() {
+        it("should renders a login button if no user", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{loggedIn: false}}
@@ -43,7 +43,7 @@ describe('navBar', function() {
             expect(hiddenButton.length).not.to.be.ok;
         });
 
-        it('should renders a logout button if user signed in', function() {
+        it("should renders a logout button if user signed in", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{loggedIn: true}}
@@ -57,7 +57,7 @@ describe('navBar', function() {
             expect(hiddenButton.length).not.to.be.ok;
         });
 
-        it('should link to users if teller', function() {
+        it("should link to users if teller", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{isTeller: true}}
@@ -69,7 +69,7 @@ describe('navBar', function() {
             expect(button).to.be.ok;
         });
 
-        it('should not link to users if not teller', function() {
+        it("should not link to users if not teller", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{isTeller: false}}
@@ -81,7 +81,7 @@ describe('navBar', function() {
             expect(hiddenButton.length).not.to.be.ok;
         });
 
-        it('should render create user for tellers', function() {
+        it("should render create user for tellers", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{loggedIn: true, isTeller: true}}
@@ -93,7 +93,7 @@ describe('navBar', function() {
             expect(button).to.be.ok;
         });
 
-        it('should not render create user for base accounts', function() {
+        it("should not render create user for base accounts", function() {
             component = TestUtils.renderIntoDocument(
                 <NavBar
                     userData={{loggedIn: true, isTeller: false}}
@@ -106,12 +106,12 @@ describe('navBar', function() {
         });
     });
 
-    describe('Events', function() {
+    describe("Events", function() {
         beforeEach(function () {
-            NavBar = require('../navBar').default;
+            NavBar = require("../navBar").default;
         });
 
-        it('should logout', function() {
+        it("should logout", function() {
             const mockLogout = jest.genMockFunction();
             component = TestUtils.renderIntoDocument(
                 <NavBar
@@ -126,7 +126,7 @@ describe('navBar', function() {
             expect(mockLogout.mock.calls.length).to.equal(1);
         });
 
-        it('should show login modal', function() {
+        it("should show login modal", function() {
             const mockLogin = jest.genMockFunction();
             component = TestUtils.renderIntoDocument(
                 <NavBar
@@ -157,7 +157,7 @@ describe('navBar', function() {
             expect(loginButton).to.be.ok;
         });
 
-        it('should login', function() {
+        it("should login", function() {
             const mockLogin = jest.genMockFunction();
             component = TestUtils.renderIntoDocument(
                 <NavBar
@@ -178,7 +178,7 @@ describe('navBar', function() {
             expect(mockLogin.mock.calls.length).to.equal(1);
         });
 
-        it('should show login error', function() {
+        it("should show login error", function() {
             const mockLogin = jest.genMockFunction();
             component = TestUtils.renderIntoDocument(
                 <NavBar

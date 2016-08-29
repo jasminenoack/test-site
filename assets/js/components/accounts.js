@@ -59,13 +59,13 @@ export class Accounts extends React.Component{
                     })
                 }
             </div>
-        )
-    };
-};
+        );
+    }
+}
 
 Accounts.propTypes = {
     accounts: React.PropTypes.array.isRequired,
     userData: React.PropTypes.object.isRequired,
-}
+};
 
 export default Accounts;

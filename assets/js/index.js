@@ -1,13 +1,13 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import { createStore, combineReducers, applyMiddleware } from "redux"
-import { Provider } from "react-redux"
-import { Router, Route, browserHistory } from "react-router"
-import { syncHistoryWithStore, routerReducer } from "react-router-redux"
+import React from "react";
+import ReactDOM from "react-dom";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import { Router, Route, browserHistory } from "react-router";
+import { syncHistoryWithStore, routerReducer } from "react-router-redux";
 import App from "./components/app";
 import store from "./store/configureStore";
 
-const history = syncHistoryWithStore(browserHistory, store)
+const history = syncHistoryWithStore(browserHistory, store);
 
 
 ReactDOM.render(

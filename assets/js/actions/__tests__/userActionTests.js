@@ -1,20 +1,20 @@
-jest.dontMock('../actionCreators');
-import fetch from 'isomorphic-fetch';
-import $ from 'jquery';
+jest.dontMock("../actionCreators");
+import fetch from "isomorphic-fetch";
+import $ from "jquery";
 
-describe('User actions', function() {
-    const chai = require('chai');
+describe("User actions", function() {
+    const chai = require("chai");
     const expect = chai.expect;
 
-    describe('getUserData', function() {
-        const {getUserData} = require('../actionCreators');
+    describe("getUserData", function() {
+        const {getUserData} = require("../actionCreators");
 
-        it('should request data from fetch and send the response to the reducer', function() {
+        it("should request data from fetch and send the response to the reducer", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = getUserData();
             dispatchFunction();
@@ -23,15 +23,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('logout', function() {
-        const {logout} = require('../actionCreators');
+    describe("logout", function() {
+        const {logout} = require("../actionCreators");
 
-        it('should log user out', function() {
+        it("should log user out", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = logout();
             dispatchFunction();
@@ -40,15 +40,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('login', function() {
-        const {login} = require('../actionCreators');
+    describe("login", function() {
+        const {login} = require("../actionCreators");
 
-        it('should log user in', function() {
+        it("should log user in", function() {
             $.ajax.mockClear();
             $.ajax.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = login();
             dispatchFunction();
@@ -56,7 +56,7 @@ describe('User actions', function() {
             expect($.ajax.mock.calls[0][0].url).to.equal("/users/login");
         });
 
-        it('should handle log in error', function() {
+        it("should handle log in error", function() {
             $.ajax.mockClear();
             $.ajax.mockReturnValueOnce(
                 new Promise((resolve, reject) => {
@@ -70,15 +70,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('create', function() {
-        const {create} = require('../actionCreators');
+    describe("create", function() {
+        const {create} = require("../actionCreators");
 
-        it('should create user in', function() {
+        it("should create user in", function() {
             $.ajax.mockClear();
             $.ajax.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = create();
             dispatchFunction();
@@ -87,15 +87,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('getAccounts', function() {
-        const {getAccounts} = require('../actionCreators');
+    describe("getAccounts", function() {
+        const {getAccounts} = require("../actionCreators");
 
-        it('should get index', function() {
+        it("should get index", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {}
-                )})
+                );})
             );
             const dispatchFunction = getAccounts();
             dispatchFunction();
@@ -103,12 +103,12 @@ describe('User actions', function() {
             expect(fetch.mock.calls[0][0]).to.equal("/accounts/");
         });
 
-        it('should get manage', function() {
+        it("should get manage", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {}
-                )})
+                );})
             );
             const dispatchFunction = getAccounts(true);
             dispatchFunction();
@@ -117,15 +117,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('getUsers', function() {
-        const {getUsers} = require('../actionCreators');
+    describe("getUsers", function() {
+        const {getUsers} = require("../actionCreators");
 
-        it('should get index', function() {
+        it("should get index", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {}
-                )})
+                );})
             );
             const dispatchFunction = getUsers();
             dispatchFunction();
@@ -133,7 +133,7 @@ describe('User actions', function() {
             expect(fetch.mock.calls[0][0]).to.equal("/users/index/");
         });
 
-        it('should handle an error', function() {
+        it("should handle an error", function() {
             fetch.mockClear();
             fetch.mockReturnValueOnce(
                 new Promise((resolve, reject) => {
@@ -145,15 +145,15 @@ describe('User actions', function() {
         });
     });
 
-    describe('createAccount', function() {
-        const {createAccount} = require('../actionCreators');
+    describe("createAccount", function() {
+        const {createAccount} = require("../actionCreators");
 
-        it('should create account', function() {
+        it("should create account", function() {
             $.ajax.mockClear();
             $.ajax.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = createAccount();
             dispatchFunction();
@@ -162,15 +162,15 @@ describe('User actions', function() {
         });
     });
 
-     describe('createTransaction', function() {
-        const {createTransaction} = require('../actionCreators');
+    describe("createTransaction", function() {
+        const {createTransaction} = require("../actionCreators");
 
-        it('should create transaction', function() {
+        it("should create transaction", function() {
             $.ajax.mockClear();
             $.ajax.mockReturnValueOnce(
                 new Promise((resolve, reject) => {resolve(
                     {json: {loggedIn: true}}
-                )})
+                );})
             );
             const dispatchFunction = createTransaction();
             dispatchFunction();

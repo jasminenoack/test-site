@@ -3,4 +3,4 @@ export const ACTIONS = {
     ERROR: "error",
     GET_ACCOUNTS: "getAccounts",
     GET_USERS: "getUsers"
-}
+};
