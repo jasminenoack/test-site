@@ -110,6 +110,10 @@ Managers can also create tellers and managers
 ### Transfer
 ![alt text](https://d3vv6lp55qjaqc.cloudfront.net/items/3t0E201B2h0J2i3e0s2U/Screen%20Recording%202016-08-29%20at%2002.08%20AM.gif "Transfer Creation")
 
+## Account Detail
+![alt text](https://d3vv6lp55qjaqc.cloudfront.net/items/1F1m150t2G3h0E3i2E1k/Screen%20Shot%202016-08-29%20at%204.44.39%20AM.png "Account Detail")
+
+
 ## Customer Experience
 
 ![alt text](https://d3vv6lp55qjaqc.cloudfront.net/items/1l091g0h3E0A2S2M0L3T/Screen%20Recording%202016-08-29%20at%2002.46%20AM.gif "Customer Experience")
