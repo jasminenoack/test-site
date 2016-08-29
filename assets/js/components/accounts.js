@@ -22,8 +22,8 @@ export class Accounts extends React.Component{
                 {
                     this.props.accounts.map((account) => {
                         return (
-                            <Link to={`/view/accounts/${account.id}`}>
-                                <article className="card account" key={account.id}>
+                            <Link to={`/view/accounts/${account.id}`} key={account.id}>
+                                <article className="card account">
                                     <header>
                                         <h3>{account.name}</h3>
                                         <h4>Owner: {account.user.username}</h4>
