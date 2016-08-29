@@ -37,7 +37,7 @@ export class Account extends React.Component{
                                         <td>{transaction.transactionType}</td>
                                         <td>{transaction.amount}</td>
                                         <td>{transaction.accountFrom && transaction.accountFrom.name}</td>
-                                        <td>{transaction.toAccount && transaction.toAccount.name}</td>
+                                        <td>{transaction.accountTo && transaction.accountTo.name}</td>
                                     </tr>
                                 );
                                 })}
