@@ -2,6 +2,19 @@
 This site implements basic banking functionality.
 It allows managers, tellers and customers to log on to the site.
 
+# Users:
+## Superuser:
+    username: roger
+    password: 4iport12
+
+## Teller:
+    username: jack
+    password: password123
+
+## Customers:
+    username: frederick
+    password: grandpa1
+
 ## Live
 [Live](https://serene-beach-16856.herokuapp.com/)
 
@@ -80,19 +93,6 @@ Managers can also create tellers and managers
 #### Measuring Coverage
 - python: Coverage
 - javaScript: Istanbul
-
-# Users:
-## Superuser:
-    username: roger
-    password: 4iport12
-
-## Teller:
-    username: jack
-    password: password123
-
-## Customers:
-    username: frederick
-    password: grandpa1
 
 ## Work Flows
 
