@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'home',
     'accounts',
+    'transaction',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +57,7 @@ MIDDLEWARE = [
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=bank_management,home,auth,accounts',
+    '--cover-package=bank_management,home,auth,accounts,transaction',
 ]
 
 ROOT_URLCONF = 'bank_management.urls'

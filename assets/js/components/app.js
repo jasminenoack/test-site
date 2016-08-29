@@ -7,18 +7,30 @@ import Create from './create';
 import Accounts from './accounts';
 import CreateAccount from './createAccount';
 import Users from './users';
+import CreateTransaction from './createTransaction';
 
 export class App extends React.Component{
     getLocation() {
         const url = this.props.location.pathname
         if(url.indexOf("create/account") !== -1 && this.props.userData.isTeller) {
             return "createAccount";
+        } else if (url.indexOf("create/transaction") !== -1 && this.props.userData.isTeller) {
+            return "createTransaction";
         } else if(url.indexOf("create") !== -1 && this.props.userData.isTeller) {
             // If the user went to create and the user had permission
             return "create";
         } else if (url.indexOf("users") !== -1 && this.props.userData.isTeller) {
             return "users";
-        } else if (url.indexOf("create") !== -1 || url.indexOf("create") !== -1) {
+        } else if (
+            // We need to be a teller if
+            (
+                // if we are creating anything but a transaction
+                url.indexOf("create") !== -1 && url.indexOf("transaction") === -1
+            )
+            // if we are viewing users.
+            || url.indexOf("users") !== -1
+            || !this.props.userData.loggedIn
+        ) {
             // The user went to a url he didn't have permissions for.
             return "authenticate";
         }
@@ -51,6 +63,17 @@ export class App extends React.Component{
             subSection = (
                 <div className="users-section">
                     <Users users={this.props.users} userData={this.props.userData}/>
+                </div>
+            );
+        } else if (current_location === "createTransaction") {
+            subSection = (
+                <div className="create-transaction-section">
+                    <CreateTransaction
+                        accounts={this.props.accounts}
+                        userData={this.props.userData}
+                        error={this.props.error}
+                        createTransaction={this.props.createTransaction}
+                    />
                 </div>
             );
         } else {
@@ -107,6 +130,7 @@ App.propTypes = {
     createAccount: React.PropTypes.func.isRequired,
     getUsers: React.PropTypes.func.isRequired,
     users: React.PropTypes.array.isRequired,
+    createTransaction: React.PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {

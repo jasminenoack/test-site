@@ -17,7 +17,9 @@ from auth.serialize import serialize_users
 @has_teller_permission
 def users_index(request):
     return JsonResponse(
-        serialize_users(User.objects.order_by("username").all()),
+        serialize_users(User.objects.extra(
+            select={'lower_name':'lower(username)'}
+        ).order_by('lower_name').all()),
         status=200,
         safe=False
     )

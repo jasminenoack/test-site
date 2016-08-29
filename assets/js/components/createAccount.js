@@ -16,12 +16,11 @@ class CreateAccount extends React.Component{
             <form className="half" style={{margin: "auto"}}>
                 <article>
                     <header>
-                        <h3>Create Account</h3>
+                        <h3>Create Account:</h3>
                     </header>
                     {
                         this.props.error &&
-                            this.state.error ||
-                            this.props.error.toLowerCase().indexOf("create") !== -1
+                            this.props.error.toLowerCase().indexOf("account") !== -1
                         ?
                             <span
                                 style={{margin: 0}}

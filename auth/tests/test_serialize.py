@@ -49,6 +49,7 @@ class SerializerTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         result = serialize_user(user)
         self.assertEqual(

@@ -14,7 +14,7 @@ class SerializerTest(TestCase):
     '''
     def test_serializes_an_account(self):
         '''
-        An user should have accounts
+        An serialize an account
         '''
         user = User.objects.create_user(
             'john',
@@ -27,6 +27,7 @@ class SerializerTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         self.assertEqual(
             serialize_account(account),
@@ -39,13 +40,14 @@ class SerializerTest(TestCase):
                 'name': account.name,
                 'id': account.id,
                 'address': account.address,
-                'phoneNumber': account.phone_number
+                'phoneNumber': account.phone_number,
+                'transactions': []
             }
         )
 
     def test_serializes_two_accounts(self):
         '''
-        An user should have accounts
+        An serialize multiple accounts
         '''
         user = User.objects.create_user(
             'john',
@@ -58,6 +60,7 @@ class SerializerTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         account2 = Account.objects.create(
             user=user,
@@ -65,6 +68,7 @@ class SerializerTest(TestCase):
             name="John's public account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         self.assertEqual(
             len(serialize_accounts([account, account2])),

@@ -1,3 +1,6 @@
+from transaction.serialize import serialize_transactions
+from transaction.models import Transaction
+
 def serialize_account(account):
     '''
     Serializes data for a single account
@@ -11,7 +14,8 @@ def serialize_account(account):
         'name': account.name,
         'balance': account.balance,
         'address': account.address,
-        'phoneNumber': account.phone_number
+        'phoneNumber': account.phone_number,
+        'transactions': serialize_transactions(Transaction.get_by_account(account))
     }
 
 def serialize_accounts(accounts):

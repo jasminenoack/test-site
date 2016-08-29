@@ -52,6 +52,7 @@ class IndexViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         account = Account.objects.create(
             user=user,
@@ -59,6 +60,7 @@ class IndexViewTest(TestCase):
             name="John's public account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         request = MockRequest(user=user)
         response = index(request)
@@ -94,6 +96,7 @@ class IndexViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         account = Account.objects.create(
             user=user,
@@ -101,6 +104,7 @@ class IndexViewTest(TestCase):
             name="John's public account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user2 = User.objects.create_user(
             'jack',
@@ -135,6 +139,7 @@ class ManagementIndexViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user2 = User.objects.create_user(
             'jack',
@@ -147,6 +152,7 @@ class ManagementIndexViewTest(TestCase):
             name="John's public account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user3 = User.objects.create_user(
             'fred',
@@ -174,6 +180,7 @@ class ManagementIndexViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user2 = User.objects.create_user(
             'jack',
@@ -186,6 +193,7 @@ class ManagementIndexViewTest(TestCase):
             name="John's public account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user3 = User.objects.create_user(
             'fred',
@@ -219,6 +227,7 @@ class DetailViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         request = MockRequest(user=user)
         response = detail(request, account.id)
@@ -241,6 +250,7 @@ class DetailViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user2 = User.objects.create_user(
             'jack',
@@ -268,6 +278,7 @@ class DetailViewTest(TestCase):
             name="John's private account",
             address="New York",
             phone_number="9176910399",
+            creator=user
         )
         user2 = User.objects.create_user(
             'jack',

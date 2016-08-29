@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import {ACTIONS} from './actionConstants';
 import cookie from "react-cookie";
 import $ from 'jquery';
+import { browserHistory } from 'react-router'
 
 const fetchOptions = {
     credentials: 'same-origin',
@@ -40,10 +41,10 @@ const postData = (dispatch, endpoint, data, error, callback) => {
         data: JSON.stringify(data),
         headers: {"X-CSRFToken": cookie.load('csrftoken')},
         success: function(response){
+            dispatch(getUserData())
             if (callback) {
                 return callback();
             }
-            return dispatch(getUserData())
         },
         error: () => {
             dispatch({
@@ -71,7 +72,10 @@ export const create = (data) => {
             dispatch,
             '/users/create',
             data,
-            "Create failed please try again"
+            "Create failed please try again",
+            () => {
+                browserHistory.push('/view/users/')
+            }
         );
     };
 };
@@ -118,6 +122,26 @@ export const createAccount = (data) => {
                         getState().default.getIn(['userData', 'isTeller'])
                     )
                 );
+                browserHistory.push('/')
+            }
+        );
+    };
+};
+
+export const createTransaction = (data) => {
+    return (dispatch, getState) => {
+        postData(
+            dispatch,
+            '/transactions/',
+            data,
+            "Create transaction failed",
+            () => {
+                dispatch(
+                    getAccounts(
+                        getState().default.getIn(['userData', 'isTeller'])
+                    )
+                );
+                browserHistory.push('/')
             }
         );
     };

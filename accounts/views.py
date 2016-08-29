@@ -15,7 +15,6 @@ def index(request):
     '''
     Supports the index of a users account and the post for a single account
     '''
-    print(request.method)
     user = request.user
     if request.method == "POST":
         if teller_permission(user):
@@ -26,6 +25,8 @@ def index(request):
             }
             data["user_id"] = data["user"]
             del data["user"]
+            data['creator'] = user
+            data['balance'] = float(data.get('balance', 0))
             Account.objects.create(**data)
             return JsonResponse({}, status=201)
         else:
@@ -33,7 +34,11 @@ def index(request):
 
     if user.is_anonymous:
         return JsonResponse([], status=200, safe=False)
-    serialized_q = serialize_accounts(user.account_set.all())
+    serialized_q = serialize_accounts(
+        user.account_set.extra(
+            select={'lower_name':'lower(name)'}
+        ).order_by('lower_name').all()
+    )
     return JsonResponse(
         serialized_q,
         status=200,
@@ -63,7 +68,9 @@ def manage_index(request):
     """
     Returns a list of all accounts
     """
-    accounts = Account.objects.order_by('user__username').all()
+    accounts = Account.objects.extra(
+        select={'lower_name':'lower(name)'}
+    ).order_by('lower_name').all()
     serialized_q = serialize_accounts(accounts)
     return JsonResponse(
         serialized_q,

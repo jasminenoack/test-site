@@ -27,6 +27,7 @@ describe('App', function() {
                     userData={{}}
                     accounts={[]}
                     getUsers={mockGetUsers}
+                    createTransaction={() => {}}
                     users={[]}
                     getAccounts={mockGetAccounts}
                     location={{pathname: "/"}}
@@ -56,6 +57,7 @@ describe('App', function() {
                     getUserData={mockGetData}
                     userData={{}}
                     accounts={[]}
+                    createTransaction={() => {}}
                     getUsers={mockGetUsers}
                     users={[]}
                     createAccount={() => {}}
@@ -77,11 +79,12 @@ describe('App', function() {
             component = TestUtils.renderIntoDocument(
                 <App
                     getUserData={mockGetData}
-                    userData={{isTeller: true}}
+                    userData={{isTeller: true, loggedIn: true}}
                     error=""
                     getUsers={() => {}}
                     users={[]}
                     accounts={[]}
+                    createTransaction={() => {}}
                     getAccounts={mockGetAccounts}
                     location={{pathname: "/"}}
                     createAccount={() => {}}
@@ -103,6 +106,7 @@ describe('App', function() {
                     getUsers={() => {}}
                     users={[]}
                     accounts={[]}
+                    createTransaction={() => {}}
                     getAccounts={mockGetAccounts}
                     location={{pathname: "create/account/"}}
                     create={() => {}}
@@ -111,6 +115,28 @@ describe('App', function() {
                     login={() => {}}/>
             );
             let section = TestUtils.findRenderedDOMComponentWithClass(component, "create-account-section");
+            expect(section).to.be.ok;
+        });
+
+        it('should render create create transactions section', function() {
+            const {App} = require('../app');
+            component = TestUtils.renderIntoDocument(
+                <App
+                    getUserData={mockGetData}
+                    userData={{isTeller: true}}
+                    error=""
+                    getUsers={() => {}}
+                    users={[]}
+                    accounts={[]}
+                    createTransaction={() => {}}
+                    getAccounts={mockGetAccounts}
+                    location={{pathname: "create/transaction/"}}
+                    create={() => {}}
+                    createAccount={() => {}}
+                    logout={() => {}}
+                    login={() => {}}/>
+            );
+            let section = TestUtils.findRenderedDOMComponentWithClass(component, "create-transaction-section");
             expect(section).to.be.ok;
         });
 
@@ -124,6 +150,7 @@ describe('App', function() {
                     getUsers={() => {}}
                     users={[]}
                     accounts={[]}
+                    createTransaction={() => {}}
                     getAccounts={mockGetAccounts}
                     location={{pathname: "/create/"}}
                     create={() => {}}
@@ -145,6 +172,7 @@ describe('App', function() {
                     getUsers={() => {}}
                     users={[]}
                     accounts={[]}
+                    createTransaction={() => {}}
                     getAccounts={mockGetAccounts}
                     location={{pathname: "/view/users"}}
                     create={() => {}}
@@ -167,6 +195,7 @@ describe('App', function() {
                     getUsers={() => {}}
                     users={[]}
                     accounts={[]}
+                    createTransaction={() => {}}
                     createAccount={() => {}}
                     getAccounts={mockGetAccounts}
                     create={() => {}}

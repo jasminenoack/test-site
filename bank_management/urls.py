@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^users/', include('auth.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^transactions/', include('transaction.urls')),
     # Otherwise all routes should load the base page
     url(r'.*', include('home.urls')),
 ]

@@ -161,4 +161,21 @@ describe('User actions', function() {
             expect($.ajax.mock.calls[0][0].url).to.equal("/accounts/");
         });
     });
+
+     describe('createTransaction', function() {
+        const {createTransaction} = require('../actionCreators');
+
+        it('should create transaction', function() {
+            $.ajax.mockClear();
+            $.ajax.mockReturnValueOnce(
+                new Promise((resolve, reject) => {resolve(
+                    {json: {loggedIn: true}}
+                )})
+            );
+            const dispatchFunction = createTransaction();
+            dispatchFunction();
+            expect($.ajax.mock.calls.length).to.equal(1);
+            expect($.ajax.mock.calls[0][0].url).to.equal("/transactions/");
+        });
+    });
 });

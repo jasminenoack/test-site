@@ -7,6 +7,7 @@ export class Accounts extends React.Component{
             <div
                 style={{minWidth: 400, margin: "auto", textAlign: "center"}}
                 className="half">
+                <h1>{this.props.userData.isTeller ? "All" : "Your"} Accounts:</h1>
                 {
                     this.props.userData.isTeller
                     ?
@@ -15,6 +16,9 @@ export class Accounts extends React.Component{
                         </Link>
                     : null
                 }
+                <Link to="/create/transaction" className="create-transaction pseudo button">
+                    Create Transaction
+                </Link>
                 {
                     this.props.accounts.map((account) => {
                         return (
@@ -41,6 +45,17 @@ export class Accounts extends React.Component{
                                             <tr>
                                                 <td>Phone Number:</td>
                                                 <td>{account.phone_number}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Transactions:</td>
+                                                <td>{(account.transactions || []).map((transaction) => {
+                                                    let withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
+                                                    return (
+                                                        <h6 className="transaction" key={transaction.id} style={ withdrawal ? {color: "red"} : {color: "blue"}}>
+                                                            {transaction.transactionType}:{transaction.amount}
+                                                        </h6>
+                                                    );
+                                                })}</td>
                                             </tr>
                                         </tbody>
                                     </table>

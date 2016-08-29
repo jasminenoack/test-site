@@ -7,6 +7,7 @@ export class Users extends React.Component{
             <div
                 style={{minWidth: 400, margin: "auto", textAlign: "center"}}
                 className="half">
+                <h1>Users:</h1>
                 {
                     this.props.users.map((user) => {
                         let role = "Customer";

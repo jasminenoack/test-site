@@ -8,7 +8,7 @@ export class Authenticate extends React.Component{
                     Unfortunately you do not have access to this page
                 </h1>
                 <p>
-                    Please authnticate with an account with the appropriate permissions
+                    Please authenticate with an account with the appropriate permissions
                 </p>
             </div>
         )

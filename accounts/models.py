@@ -2,10 +2,17 @@
 Account models
 '''
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Account(models.Model):
     '''
     User account data
+    uses ints to avoid pitfalls of floats.
+    e.g:
+    >>> 1000.00 - 65.43
+    934.5699999999999
+    >>> (int(1000.00*100) - int(65.43*100))/100
+    934.57
     '''
     user = models.ForeignKey(
         'auth.User',
@@ -26,13 +33,28 @@ class Account(models.Model):
         db_index=True,
         null=False,
     )
-    balance = models.DecimalField(
-        max_digits=15,
-        decimal_places=2,
+    _balance = models.IntegerField(
         db_index=True,
-        default=0
+        default=0,
     )
     unique_together = (("user", "name"),)
+    creator = models.ForeignKey(
+        'auth.User',
+        on_delete=models.CASCADE,
+        null=False,
+        related_name='accounts_created'
+    )
+    unique_together = (("user", "name"),)
+
+    @property
+    def balance(self):
+        return self._balance / 100
+
+    @balance.setter
+    def balance(self, value):
+        self._balance = int(value * 100)
+        return self.balance
+
 
     def __str__(self):
         return "{username}:{0:.2f}".format(
@@ -46,3 +68,16 @@ class Account(models.Model):
         '''
         self.full_clean()
         super(Account, self).save(*args, **kwargs)
+
+    def withdraw(self, amount):
+        '''
+        Withdraws money from account.
+        '''
+        self.balance = self.balance - amount
+        if self.balance < 0:
+            raise ValidationError("Overdrawn")
+        self.save()
+
+    def deposit(self, amount):
+        self.balance = self.balance + amount
+        self.save()
