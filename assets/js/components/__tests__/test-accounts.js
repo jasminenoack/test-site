@@ -1,21 +1,21 @@
-jest.dontMock('../accounts');
+jest.dontMock("../accounts");
 
-describe('Accounts', function() {
+describe("Accounts", function() {
     let React;
     let TestUtils;
     let Accounts;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
     });
 
-    describe('Initial Render', function() {
+    describe("Initial Render", function() {
         beforeEach(function () {
-            Accounts = require('../accounts').default;
+            Accounts = require("../accounts").default;
             component = TestUtils.renderIntoDocument(
                 <Accounts
                     userData={{isTeller: false}}
@@ -24,7 +24,7 @@ describe('Accounts', function() {
             );
         });
 
-        it('should render', function() {
+        it("should render", function() {
             expect(component).to.be.ok;
             const accounts = TestUtils.scryRenderedDOMComponentsWithClass(
                 component,
@@ -33,7 +33,7 @@ describe('Accounts', function() {
             expect(accounts.length).to.equal(1);
         });
 
-        it('should render transactions', function() {
+        it("should render transactions", function() {
             expect(component).to.be.ok;
             const transactions = TestUtils.findRenderedDOMComponentWithClass(
                 component,
@@ -42,7 +42,7 @@ describe('Accounts', function() {
             expect(transactions).to.be.ok;
         });
 
-        it('should not render create if not teller', function() {
+        it("should not render create if not teller", function() {
             expect(component).to.be.ok;
             const accounts = TestUtils.scryRenderedDOMComponentsWithClass(
                 component,
@@ -51,7 +51,7 @@ describe('Accounts', function() {
             expect(accounts.length).to.equal(0);
         });
 
-        it('should render create transaction', function() {
+        it("should render create transaction", function() {
             expect(component).to.be.ok;
             const button = TestUtils.findRenderedDOMComponentWithClass(
                 component,
@@ -60,7 +60,7 @@ describe('Accounts', function() {
             expect(button).to.be.ok;
         });
 
-        it('should render create if teller', function() {
+        it("should render create if teller", function() {
             component = TestUtils.renderIntoDocument(
                 <Accounts
                     userData={{isTeller: true}}

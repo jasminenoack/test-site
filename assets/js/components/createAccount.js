@@ -8,7 +8,7 @@ class CreateAccount extends React.Component{
             error: "",
         };
         this.create = this.create.bind(this);
-    };
+    }
 
     render() {
         const that = this;
@@ -70,7 +70,7 @@ class CreateAccount extends React.Component{
                             <select className="account-user" ref={(ref) => that.user = ref}>
                                 {
                                     this.props.users.map((user) => {
-                                        return <option key={user.id} value={user.id}>{user.username}</option>
+                                        return <option key={user.id} value={user.id}>{user.username}</option>;
                                     })
                                 }
                             </select>
@@ -85,7 +85,7 @@ class CreateAccount extends React.Component{
                 </article>
             </form>
         );
-    };
+    }
 
     create() {
         const data = {
@@ -96,9 +96,9 @@ class CreateAccount extends React.Component{
             user: this.user.value,
         };
         this.props.createAccount(data);
-        this.setState({status: `Creating Account: ${data.name}`})
-    };
-};
+        this.setState({status: `Creating Account: ${data.name}`});
+    }
+}
 
 CreateAccount.propTypes = {
     createAccount: React.PropTypes.func.isRequired,

@@ -1,5 +1,5 @@
-import Immutable from 'immutable';
-import {ACTIONS} from './actions/actionConstants';
+import Immutable from "immutable";
+import {ACTIONS} from "./actions/actionConstants";
 
 const initialState = Immutable.fromJS({
     userData: {loggedIn: false},

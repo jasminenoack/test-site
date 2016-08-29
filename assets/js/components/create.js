@@ -8,7 +8,7 @@ class Create extends React.Component{
             error: "",
         };
         this.create = this.create.bind(this);
-    };
+    }
 
     render() {
         const that = this;
@@ -89,9 +89,9 @@ class Create extends React.Component{
                                 <label>
                                     Role:
                                     <select className="role-select" ref={(ref) => that.role = ref}>
-                                        <option>Customer</option>
-                                        <option>Teller</option>
-                                        <option>Manager</option>
+                                        <option value="customer">Customer</option>
+                                        <option value="teller">Teller</option>
+                                        <option value="manager">Manager</option>
                                     </select>
                                 </label>
                             : null
@@ -106,11 +106,11 @@ class Create extends React.Component{
                 </article>
             </form>
         );
-    };
+    }
 
     verifyData(data) {
         return data.password === data.password2;
-    };
+    }
 
     create() {
         const data = {
@@ -126,12 +126,12 @@ class Create extends React.Component{
         }
         if (this.verifyData(data)) {
             this.props.create(data);
-            this.setState({status: `Creating user: ${data.username}`})
+            this.setState({status: `Creating user: ${data.username}`});
         } else {
             this.setState({error: "Passwords do not match"});
-        };
-    };
-};
+        }
+    }
+}
 
 Create.propTypes = {
     create: React.PropTypes.func.isRequired,

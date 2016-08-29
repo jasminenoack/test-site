@@ -1,12 +1,12 @@
 import React from "react";
-import {Link} from 'react-router';
+import {Link} from "react-router";
 
 
 class NavBar extends React.Component{
     constructor(props) {
         super(props);
         this.signIn = this.signIn.bind(this);
-    };
+    }
 
     render() {
         const that = this;
@@ -114,16 +114,16 @@ class NavBar extends React.Component{
                 }
             </div>
         );
-    };
+    }
 
     signIn() {
         const data = {
             username: this.username.value,
             password: this.password.value,
-        }
+        };
         this.props.login(data);
-    };
-};
+    }
+}
 
 NavBar.propTypes = {
     userData: React.PropTypes.object.isRequired,

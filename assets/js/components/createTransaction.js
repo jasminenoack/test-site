@@ -8,7 +8,7 @@ class CreateTransaction extends React.Component{
             error: "",
         };
         this.create = this.create.bind(this);
-    };
+    }
 
     render() {
         const that = this;
@@ -99,7 +99,7 @@ class CreateTransaction extends React.Component{
                 </article>
             </form>
         );
-    };
+    }
 
     create() {
         const data = {
@@ -109,9 +109,9 @@ class CreateTransaction extends React.Component{
             transactionType: this.type.value,
         };
         this.props.createTransaction(data);
-        this.setState({status: `Creating Transaction`})
-    };
-};
+        this.setState({status: "Creating Transaction"});
+    }
+}
 
 CreateTransaction.propTypes = {
     createTransaction: React.PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-var React = require("react")
+var React = require("react");
 
 export class Authenticate extends React.Component{
     render() {
@@ -11,8 +11,8 @@ export class Authenticate extends React.Component{
                     Please authenticate with an account with the appropriate permissions
                 </p>
             </div>
-        )
-    };
-};
+        );
+    }
+}
 
 export default Authenticate;

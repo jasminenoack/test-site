@@ -39,7 +39,7 @@ class TransactionPostViewTest(TestCase):
             creator=user
         )
         mock_decode.return_value = {
-            'accountFrom': account.id,
+            'accountFrom': str(account.id),
             'accountTo': None,
             'amount': 40.98,
             'transaction_type': "withdrawal"
@@ -72,7 +72,7 @@ class TransactionPostViewTest(TestCase):
             creator=user
         )
         mock_decode.return_value = {
-            'accountFrom': account.id,
+            'accountFrom': str(account.id),
             'accountTo': None,
             'amount': 40.98,
             'transaction_type': "withdrawal"
@@ -105,7 +105,7 @@ class TransactionPostViewTest(TestCase):
             creator=user
         )
         mock_decode.return_value = {
-            'accountTo': account.id,
+            'accountTo': str(account.id),
             'accountFrom': None,
             'amount': 40.98,
             'transaction_type': "deposit"
@@ -138,7 +138,7 @@ class TransactionPostViewTest(TestCase):
             creator=user
         )
         mock_decode.return_value = {
-            'accountTo': account.id,
+            'accountTo': str(account.id),
             'accountFrom': None,
             'amount': 40.98,
             'transaction_type': "deposit"

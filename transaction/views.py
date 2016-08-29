@@ -31,8 +31,8 @@ def post(request):
         teller_permission(user) or
         (
             data.get("transaction_type") == "transfer" and
-            data.get("account_to_id") in account_ids and
-            data.get("account_from_id") in account_ids
+            int(data.get("account_to_id")) in account_ids and
+            int(data.get("account_from_id")) in account_ids
         )
     ):
         Transaction.objects.create(**data)

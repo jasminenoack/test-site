@@ -1,24 +1,24 @@
-import Immutable from 'immutable';
-import chai, {expect} from 'chai';
-import chaiImmutable from 'chai-immutable';
+import Immutable from "immutable";
+import chai, {expect} from "chai";
+import chaiImmutable from "chai-immutable";
 
 chai.use(chaiImmutable);
-jest.dontMock('../reducer');
-jest.dontMock('../actions/actionConstants');
+jest.dontMock("../reducer");
+jest.dontMock("../actions/actionConstants");
 
-describe('Reducer', () => {
+describe("Reducer", () => {
     let React;
     let reducer;
     let ACTIONS;
 
     beforeEach(() => {
-        React = require('react');
-        reducer = require('../reducer').default;
-        ACTIONS = require('../actions/actionConstants').ACTIONS;
+        React = require("react");
+        reducer = require("../reducer").default;
+        ACTIONS = require("../actions/actionConstants").ACTIONS;
     });
 
 
-    it('handles GET_USER_DATA', () => {
+    it("handles GET_USER_DATA", () => {
         const state = Immutable.Map();
         const data = {loggedIn: true};
         const newState = reducer(state, {
@@ -32,7 +32,7 @@ describe('Reducer', () => {
         expect(newState).to.equal(expectedState);
     });
 
-    it('handles GET_ACCOUNTS', () => {
+    it("handles GET_ACCOUNTS", () => {
         const state = Immutable.Map();
         const data = [{id: 1}];
         const newState = reducer(state, {
@@ -46,7 +46,7 @@ describe('Reducer', () => {
         expect(newState).to.equal(expectedState);
     });
 
-    it('handles GET_USERS', () => {
+    it("handles GET_USERS", () => {
         const state = Immutable.Map();
         const data = [{id: 1}];
         const newState = reducer(state, {
@@ -60,7 +60,7 @@ describe('Reducer', () => {
         expect(newState).to.equal(expectedState);
     });
 
-    it('handles ERROR', () => {
+    it("handles ERROR", () => {
         const state = Immutable.Map();
         const data = "error";
         const newState = reducer(state, {

@@ -32,7 +32,7 @@ export class Users extends React.Component{
                                                     <td>{account.name}</td>
                                                     <td>{account.balance}</td>
                                                 </tr>
-                                            )
+                                            );
                                         })}
                                         </tbody>
                                     </table>
@@ -42,13 +42,13 @@ export class Users extends React.Component{
                     })
                 }
             </div>
-        )
-    };
-};
+        );
+    }
+}
 
 Users.propTypes = {
     users: React.PropTypes.array.isRequired,
     userData: React.PropTypes.object.isRequired,
-}
+};
 
 export default Users;

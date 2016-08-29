@@ -1,22 +1,22 @@
-jest.dontMock('../createAccount');
+jest.dontMock("../createAccount");
 
-describe('CreateAccount', function() {
+describe("CreateAccount", function() {
     let React;
     let TestUtils;
     let CreateAccount;
     let mockCreate;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
     });
 
-    describe('Initial Render', function() {
+    describe("Initial Render", function() {
         beforeEach(function () {
-            CreateAccount = require('../createAccount').default;
+            CreateAccount = require("../createAccount").default;
             mockCreate = jest.genMockFunction();
             component = TestUtils.renderIntoDocument(
                 <CreateAccount
@@ -28,7 +28,7 @@ describe('CreateAccount', function() {
             );
         });
 
-        it('should render form', function() {
+        it("should render form", function() {
             expect(component).to.be.ok;
             let name = TestUtils.findRenderedDOMComponentWithClass(
                 component,
@@ -62,7 +62,7 @@ describe('CreateAccount', function() {
             expect(button).to.be.ok;
         });
 
-        it('should call create', function() {
+        it("should call create", function() {
             let button = TestUtils.findRenderedDOMComponentWithClass(
                 component,
                 "create-button"

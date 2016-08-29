@@ -1,21 +1,21 @@
-jest.dontMock('../users');
+jest.dontMock("../users");
 
-describe('Users', function() {
+describe("Users", function() {
     let React;
     let TestUtils;
     let Users;
     let component;
-    const chai = require('chai');
+    const chai = require("chai");
     const expect = chai.expect;
 
     beforeEach(function() {
-        React = require('react');
-        TestUtils = require('react-addons-test-utils');
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
     });
 
-    describe('Initial Render', function() {
+    describe("Initial Render", function() {
         beforeEach(function () {
-            Users = require('../users').default;
+            Users = require("../users").default;
             component = TestUtils.renderIntoDocument(
                 <Users
                     userData={{isTeller: false}}
@@ -26,7 +26,7 @@ describe('Users', function() {
             );
         });
 
-        it('should render', function() {
+        it("should render", function() {
             expect(component).to.be.ok;
             const users = TestUtils.scryRenderedDOMComponentsWithClass(
                 component,
