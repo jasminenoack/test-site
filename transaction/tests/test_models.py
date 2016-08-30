@@ -148,6 +148,33 @@ class TransactionTest(TestCase):
             ValidationError,
             Transaction.objects.create,
             transaction_type="deposit",
+            account_from=None,
+            account_to=account,
+            creator=user
+        )
+
+    def test_must_have_amount_greater_than_zero(self):
+        """
+        Transaction requires amount greater than 0
+        """
+        user = User.objects.create_user(
+            'john',
+            'lennon@thebeatles.com',
+            'johnpassword'
+        )
+        account = Account.objects.create(
+            user=user,
+            balance=1000,
+            address="New York",
+            phone_number="9176910399",
+            name="John's private account",
+            creator=user
+        )
+        self.assertRaises(
+            ValidationError,
+            Transaction.objects.create,
+            transaction_type="withdrawal",
+            amount=-1,
             account_from=account,
             account_to=None,
             creator=user

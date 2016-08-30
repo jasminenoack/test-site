@@ -93,6 +93,8 @@ class Transaction(models.Model):
             )
         ):
             raise ValidationError("Incorrect transaction format")
+        if not (self._amount and self.amount > 0):
+            raise ValidationError("Amount muse be greater than 0")
         super(Transaction, self).clean(*args, **kwargs)
 
     @transaction.atomic

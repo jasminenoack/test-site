@@ -66,6 +66,26 @@ class AccountTest(TestCase):
             creator=user
         )
 
+    def test_does_not_allow_negative_balance(self):
+        """
+        Account can't have negative balance
+        """
+        user = User.objects.create_user(
+            'john',
+            'lennon@thebeatles.com',
+            'johnpassword'
+        )
+        self.assertRaises(
+            ValidationError,
+            Account.objects.create,
+            user=user,
+            balance=-1000,
+            phone_number="Private",
+            address="New York",
+            name="John's private account",
+            creator=user
+        )
+
     def test_does_not_allow_no_address(self):
         """
         Account requires address

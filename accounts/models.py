@@ -62,6 +62,14 @@ class Account(models.Model):
             username=self.user.username
         )
 
+    def full_clean(self, *args, **kwargs):
+        '''
+        Overwrites full clean to not allow accounts to have a negative balance
+        '''
+        if self._balance and self.balance < 0:
+            raise ValidationError("Can't create account with negative balance")
+        super(Account, self).full_clean(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         '''
         Run full_clean on save
