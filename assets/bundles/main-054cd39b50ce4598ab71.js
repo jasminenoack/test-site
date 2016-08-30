@@ -66,7 +66,7 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _configureStore = __webpack_require__(283);
+	var _configureStore = __webpack_require__(285);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -86,7 +86,8 @@
 	        _react2.default.createElement(_reactRouter.Route, { path: "create/", component: _app2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: "create/account", component: _app2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: "view/users", component: _app2.default }),
-	        _react2.default.createElement(_reactRouter.Route, { path: "create/transaction", component: _app2.default })
+	        _react2.default.createElement(_reactRouter.Route, { path: "create/transaction", component: _app2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: "view/accounts/:accountId", component: _app2.default })
 	    )
 	), document.getElementById("outer_container"));
 
@@ -29235,6 +29236,10 @@
 
 	var _createTransaction2 = _interopRequireDefault(_createTransaction);
 
+	var _account = __webpack_require__(284);
+
+	var _account2 = _interopRequireDefault(_account);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -29269,6 +29274,8 @@
 	                return "create";
 	            } else if (url.indexOf("users") !== -1 && this.props.userData.isTeller) {
 	                return "users";
+	            } else if (url.indexOf("view/accounts") !== -1 && this.props.userData.loggedIn) {
+	                return "viewAccount";
 	            } else if (
 	            // We need to be a teller if
 
@@ -29281,9 +29288,24 @@
 	            }
 	        }
 	    }, {
+	        key: 'findAccount',
+	        value: function findAccount(id) {
+	            for (var index in this.props.accounts) {
+	                if (this.props.accounts[index].id == id) {
+	                    return this.props.accounts[index];
+	                }
+	            };
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var subSection = void 0;
+	            var subSection = React.createElement(
+	                'div',
+	                { className: 'accounts-section' },
+	                React.createElement(_accounts2.default, {
+	                    accounts: this.props.accounts,
+	                    userData: this.props.userData })
+	            );
 	            var current_location = this.getLocation();
 	            if (current_location === "create") {
 	                subSection = React.createElement(
@@ -29326,15 +29348,16 @@
 	                        createTransaction: this.props.createTransaction
 	                    })
 	                );
-	            } else {
-	                subSection = React.createElement(
-	                    'div',
-	                    { className: 'accounts-section' },
-	                    React.createElement(_accounts2.default, {
-	                        accounts: this.props.accounts,
-	                        userData: this.props.userData })
-	                );
-	            }
+	            } else if (current_location === "viewAccount") {
+	                var account = this.findAccount(this.props.params.accountId);
+	                if (account) {
+	                    subSection = React.createElement(
+	                        'div',
+	                        { className: 'view-account-section' },
+	                        React.createElement(_account2.default, { account: account })
+	                    );
+	                }
+	            };
 
 	            return React.createElement(
 	                'div',
@@ -29373,8 +29396,6 @@
 	    return App;
 	}(React.Component);
 
-	;
-
 	App.propTypes = {
 	    getUserData: React.PropTypes.func.isRequired,
 	    userData: React.PropTypes.object.isRequired,
@@ -29392,12 +29413,12 @@
 
 	function mapStateToProps(state) {
 	    return {
-	        userData: state.default.get('userData').toJS(),
-	        error: state.default.get('error'),
-	        accounts: state.default.get('accounts').toJS(),
-	        users: state.default.get('users').toJS()
+	        userData: state.default.get("userData").toJS(),
+	        error: state.default.get("error"),
+	        accounts: state.default.get("accounts").toJS(),
+	        users: state.default.get("users").toJS()
 	    };
-	};
+	}
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, actionCreators)(App);
 
@@ -29405,7 +29426,7 @@
 /* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -29431,10 +29452,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var fetchOptions = {
-	    credentials: 'same-origin',
+	    credentials: "same-origin",
 	    headers: {
-	        'Content-Type': 'application/json',
-	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
+	        "Content-Type": "application/json",
+	        "X-CSRFToken": _reactCookie2.default.load("csrftoken")
 	    }
 	};
 
@@ -29465,7 +29486,7 @@
 	        type: "POST",
 	        url: endpoint,
 	        data: JSON.stringify(data),
-	        headers: { "X-CSRFToken": _reactCookie2.default.load('csrftoken') },
+	        headers: { "X-CSRFToken": _reactCookie2.default.load("csrftoken") },
 	        success: function success(response) {
 	            dispatch(getUserData());
 	            if (callback) {
@@ -29483,15 +29504,15 @@
 
 	var login = exports.login = function login(data) {
 	    return function (dispatch) {
-	        postData(dispatch, '/users/login', data, "Login failed please try again");
+	        postData(dispatch, "/users/login", data, "Login failed please try again");
 	    };
 	};
 
 	var create = exports.create = function create(data) {
 	    return function (dispatch) {
-	        postData(dispatch, '/users/create', data, "Create failed please try again", function () {
+	        postData(dispatch, "/users/create", data, "Create failed please try again", function () {
 	            dispatch(getUsers());
-	            _reactRouter.browserHistory.push('/view/users/');
+	            _reactRouter.browserHistory.push("/view/users/");
 	        });
 	    };
 	};
@@ -29499,9 +29520,9 @@
 	var getAccounts = exports.getAccounts = function getAccounts(manage) {
 	    var url = void 0;
 	    if (manage) {
-	        url = '/accounts/manage/';
+	        url = "/accounts/manage/";
 	    } else {
-	        url = '/accounts/';
+	        url = "/accounts/";
 	    }
 	    return function (dispatch) {
 	        (0, _isomorphicFetch2.default)(url, fetchOptions).then(function (response) {
@@ -29513,7 +29534,7 @@
 	};
 
 	var getUsers = exports.getUsers = function getUsers() {
-	    var url = '/users/index/';
+	    var url = "/users/index/";
 	    return function (dispatch, getState) {
 	        (0, _isomorphicFetch2.default)(url, fetchOptions).then(function (response) {
 	            return response.json();
@@ -29527,18 +29548,18 @@
 
 	var createAccount = exports.createAccount = function createAccount(data) {
 	    return function (dispatch, getState) {
-	        postData(dispatch, '/accounts/', data, "Create account failed", function () {
-	            dispatch(getAccounts(getState().default.getIn(['userData', 'isTeller'])));
-	            _reactRouter.browserHistory.push('/');
+	        postData(dispatch, "/accounts/", data, "Create account failed", function () {
+	            dispatch(getAccounts(getState().default.getIn(["userData", "isTeller"])));
+	            _reactRouter.browserHistory.push("/");
 	        });
 	    };
 	};
 
 	var createTransaction = exports.createTransaction = function createTransaction(data) {
 	    return function (dispatch, getState) {
-	        postData(dispatch, '/transactions/', data, "Create transaction failed", function () {
-	            dispatch(getAccounts(getState().default.getIn(['userData', 'isTeller'])));
-	            _reactRouter.browserHistory.push('/');
+	        postData(dispatch, "/transactions/", data, "Create transaction failed", function () {
+	            dispatch(getAccounts(getState().default.getIn(["userData", "isTeller"])));
+	            _reactRouter.browserHistory.push("/");
 	        });
 	    };
 	};
@@ -40591,8 +40612,6 @@
 	    return NavBar;
 	}(_react2.default.Component);
 
-	;
-
 	NavBar.propTypes = {
 	    userData: _react2.default.PropTypes.object.isRequired,
 	    login: _react2.default.PropTypes.func.isRequired,
@@ -40653,8 +40672,6 @@
 
 	    return Authenticate;
 	}(React.Component);
-
-	;
 
 	exports.default = Authenticate;
 
@@ -40873,14 +40890,12 @@
 	                this.setState({ status: "Creating user: " + data.username });
 	            } else {
 	                this.setState({ error: "Passwords do not match" });
-	            };
+	            }
 	        }
 	    }]);
 
 	    return Create;
 	}(_react2.default.Component);
-
-	;
 
 	Create.propTypes = {
 	    create: _react2.default.PropTypes.func.isRequired,
@@ -40952,109 +40967,85 @@
 	                ),
 	                this.props.accounts.map(function (account) {
 	                    return _react2.default.createElement(
-	                        "article",
-	                        { className: "card account", key: account.id },
+	                        _reactRouter.Link,
+	                        { to: "/view/accounts/" + account.id, key: account.id },
 	                        _react2.default.createElement(
-	                            "header",
-	                            null,
+	                            "article",
+	                            { className: "card account" },
 	                            _react2.default.createElement(
-	                                "h3",
+	                                "header",
 	                                null,
-	                                account.name
+	                                _react2.default.createElement(
+	                                    "h3",
+	                                    null,
+	                                    account.name
+	                                ),
+	                                _react2.default.createElement(
+	                                    "h4",
+	                                    null,
+	                                    "Owner: ",
+	                                    account.user.username
+	                                )
 	                            ),
 	                            _react2.default.createElement(
-	                                "h4",
+	                                "footer",
 	                                null,
-	                                "Owner: ",
-	                                account.user.username
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            "footer",
-	                            null,
-	                            _react2.default.createElement(
-	                                "table",
-	                                { className: "primary", style: { margin: "auto" } },
 	                                _react2.default.createElement(
-	                                    "tbody",
-	                                    null,
+	                                    "table",
+	                                    { className: "primary", style: { margin: "auto" } },
 	                                    _react2.default.createElement(
-	                                        "tr",
+	                                        "tbody",
 	                                        null,
 	                                        _react2.default.createElement(
-	                                            "td",
+	                                            "tr",
 	                                            null,
-	                                            "Balance:"
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                "Balance:"
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                account.balance
+	                                            )
 	                                        ),
 	                                        _react2.default.createElement(
-	                                            "td",
+	                                            "tr",
 	                                            null,
-	                                            account.balance
-	                                        )
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        "tr",
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            "Account Number:"
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                "Account Number:"
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                account.id
+	                                            )
 	                                        ),
 	                                        _react2.default.createElement(
-	                                            "td",
+	                                            "tr",
 	                                            null,
-	                                            account.id
-	                                        )
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        "tr",
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            "Address:"
-	                                        ),
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            account.address
-	                                        )
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        "tr",
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            "Phone Number:"
-	                                        ),
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            account.phone_number
-	                                        )
-	                                    ),
-	                                    _react2.default.createElement(
-	                                        "tr",
-	                                        null,
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            "Transactions:"
-	                                        ),
-	                                        _react2.default.createElement(
-	                                            "td",
-	                                            null,
-	                                            (account.transactions || []).map(function (transaction) {
-	                                                var withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
-	                                                return _react2.default.createElement(
-	                                                    "h6",
-	                                                    { className: "transaction", key: transaction.id, style: withdrawal ? { color: "red" } : { color: "blue" } },
-	                                                    transaction.transactionType,
-	                                                    ":",
-	                                                    transaction.amount
-	                                                );
-	                                            })
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                "Transactions:"
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                "td",
+	                                                null,
+	                                                (account.transactions || []).map(function (transaction) {
+	                                                    var withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
+	                                                    return _react2.default.createElement(
+	                                                        "h6",
+	                                                        { className: "transaction", key: transaction.id, style: withdrawal ? { color: "red" } : { color: "blue" } },
+	                                                        transaction.transactionType,
+	                                                        ":",
+	                                                        transaction.amount
+	                                                    );
+	                                                })
+	                                            )
 	                                        )
 	                                    )
 	                                )
@@ -41068,8 +41059,6 @@
 
 	    return Accounts;
 	}(_react2.default.Component);
-
-	;
 
 	Accounts.propTypes = {
 	    accounts: _react2.default.PropTypes.array.isRequired,
@@ -41253,8 +41242,6 @@
 	    return CreateAccount;
 	}(_react2.default.Component);
 
-	;
-
 	CreateAccount.propTypes = {
 	    createAccount: _react2.default.PropTypes.func.isRequired,
 	    error: _react2.default.PropTypes.string.isRequired,
@@ -41379,8 +41366,6 @@
 	    return Users;
 	}(_react2.default.Component);
 
-	;
-
 	Users.propTypes = {
 	    users: _react2.default.PropTypes.array.isRequired,
 	    userData: _react2.default.PropTypes.object.isRequired
@@ -41404,6 +41389,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(283);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -41421,15 +41410,22 @@
 	        var _this = _possibleConstructorReturn(this, (CreateTransaction.__proto__ || Object.getPrototypeOf(CreateTransaction)).call(this, props));
 
 	        _this.state = {
-	            error: ""
+	            error: "",
+	            accountFrom: null,
+	            accountTo: null
 	        };
 	        _this.create = _this.create.bind(_this);
+	        _this.setAccountFrom = _this.setAccountFrom.bind(_this);
+	        _this.setAccountTo = _this.setAccountTo.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(CreateTransaction, [{
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
+	            var menuData = { fontSize: 12 };
 	            var that = this;
 	            return _react2.default.createElement(
 	                "form",
@@ -41491,56 +41487,108 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            "label",
-	                            null,
-	                            " Account From:",
+	                            { className: "transaction-account-from" },
+	                            "Account From:",
 	                            _react2.default.createElement(
-	                                "select",
-	                                { className: "transaction-account-from", ref: function ref(_ref2) {
-	                                        return that.accountFrom = _ref2;
-	                                    } },
+	                                "ul",
+	                                { className: "c-menu c-menu--high" },
 	                                _react2.default.createElement(
-	                                    "option",
-	                                    { value: "" },
-	                                    "Account From"
+	                                    "li",
+	                                    {
+	                                        className: (0, _classnames2.default)("c-menu__item", "account-from-option", { "c-menu__item--active": !this.state.accountFrom }),
+	                                        onClick: this.setAccountFrom },
+	                                    _react2.default.createElement(
+	                                        "div",
+	                                        { style: menuData },
+	                                        "Select None"
+	                                    )
 	                                ),
 	                                this.props.accounts.map(function (account) {
 	                                    return _react2.default.createElement(
-	                                        "option",
-	                                        { key: account.id, value: account.id },
-	                                        "id-",
-	                                        account.id,
-	                                        " ::: name-",
-	                                        account.name,
-	                                        " ::: balance-",
-	                                        account.balance
+	                                        "li",
+	                                        {
+	                                            className: (0, _classnames2.default)("c-menu__item", "account-from-option", { "c-menu__item--active": _this2.state.accountFrom === account.id }),
+	                                            key: account.id,
+	                                            value: account.id,
+	                                            onClick: _this2.setAccountFrom },
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Account Number: ",
+	                                            account.id
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Name: ",
+	                                            account.name
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Balance: $",
+	                                            account.balance
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Owner: ",
+	                                            account.user.username
+	                                        )
 	                                    );
 	                                })
 	                            )
 	                        ),
 	                        _react2.default.createElement(
 	                            "label",
-	                            null,
-	                            " Account To:",
+	                            { className: "transaction-account-to" },
+	                            "Account To:",
 	                            _react2.default.createElement(
-	                                "select",
-	                                { className: "transaction-account-to", ref: function ref(_ref3) {
-	                                        return that.accountTo = _ref3;
-	                                    } },
+	                                "ul",
+	                                { className: "c-menu c-menu--high" },
 	                                _react2.default.createElement(
-	                                    "option",
-	                                    { value: "" },
-	                                    "Account To"
+	                                    "li",
+	                                    {
+	                                        className: (0, _classnames2.default)("c-menu__item", "account-to-option", { "c-menu__item--active": !this.state.accountTo }),
+	                                        onClick: this.setAccountTo },
+	                                    _react2.default.createElement(
+	                                        "div",
+	                                        { style: menuData },
+	                                        "Select None"
+	                                    )
 	                                ),
 	                                this.props.accounts.map(function (account) {
 	                                    return _react2.default.createElement(
-	                                        "option",
-	                                        { key: account.id, value: account.id },
-	                                        "id-",
-	                                        account.id,
-	                                        " ::: name-",
-	                                        account.name,
-	                                        " ::: balance-",
-	                                        account.balance
+	                                        "li",
+	                                        {
+	                                            className: (0, _classnames2.default)("c-menu__item", "account-to-option", { "c-menu__item--active": _this2.state.accountTo === account.id }),
+	                                            key: account.id,
+	                                            value: account.id,
+	                                            onClick: _this2.setAccountTo },
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Account Number: ",
+	                                            account.id
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Name: ",
+	                                            account.name
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Balance: $",
+	                                            account.balance
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            "div",
+	                                            { style: menuData },
+	                                            "Owner: ",
+	                                            account.user.username
+	                                        )
 	                                    );
 	                                })
 	                            )
@@ -41551,8 +41599,8 @@
 	                            "Amount: ",
 	                            _react2.default.createElement("input", {
 	                                required: true,
-	                                ref: function ref(_ref4) {
-	                                    return that.amount = _ref4;
+	                                ref: function ref(_ref2) {
+	                                    return that.amount = _ref2;
 	                                },
 	                                className: "transaction-amount",
 	                                placeholder: "amount"
@@ -41571,12 +41619,22 @@
 	            );
 	        }
 	    }, {
+	        key: "setAccountFrom",
+	        value: function setAccountFrom(event) {
+	            this.setState({ accountFrom: event.currentTarget.value });
+	        }
+	    }, {
+	        key: "setAccountTo",
+	        value: function setAccountTo(event) {
+	            this.setState({ accountTo: event.currentTarget.value });
+	        }
+	    }, {
 	        key: "create",
 	        value: function create() {
 	            var data = {
 	                amount: this.amount.value,
-	                accountFrom: this.accountFrom.value ? this.accountFrom.value : null,
-	                accountTo: this.accountTo.value ? this.accountTo.value : null,
+	                accountFrom: this.state.accountFrom ? this.state.accountFrom : null,
+	                accountTo: this.state.accountTo ? this.state.accountTo : null,
 	                transactionType: this.type.value
 	            };
 	            this.props.createTransaction(data);
@@ -41586,8 +41644,6 @@
 
 	    return CreateTransaction;
 	}(_react2.default.Component);
-
-	;
 
 	CreateTransaction.propTypes = {
 	    createTransaction: _react2.default.PropTypes.func.isRequired,
@@ -41602,6 +41658,235 @@
 /* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.Account = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(200);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Account = exports.Account = function (_React$Component) {
+	    _inherits(Account, _React$Component);
+
+	    function Account() {
+	        _classCallCheck(this, Account);
+
+	        return _possibleConstructorReturn(this, (Account.__proto__ || Object.getPrototypeOf(Account)).apply(this, arguments));
+	    }
+
+	    _createClass(Account, [{
+	        key: "render",
+	        value: function render() {
+	            var account = this.props.account;
+
+	            return _react2.default.createElement(
+	                "article",
+	                { style: { textAlign: "center" }, className: "card account full", key: account.id },
+	                _react2.default.createElement(
+	                    "header",
+	                    null,
+	                    _react2.default.createElement(
+	                        "h3",
+	                        null,
+	                        account.name
+	                    ),
+	                    _react2.default.createElement(
+	                        "h4",
+	                        null,
+	                        "Owner: ",
+	                        account.user.username
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "footer",
+	                    null,
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "half", style: { margin: "auto" } },
+	                        _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Balance: ",
+	                            account.balance
+	                        ),
+	                        _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Account Number: ",
+	                            account.id
+	                        ),
+	                        _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Address: ",
+	                            account.address
+	                        ),
+	                        _react2.default.createElement(
+	                            "h3",
+	                            null,
+	                            "Phone Number: ",
+	                            account.phoneNumber
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        "table",
+	                        { className: "primary", style: { margin: "auto" } },
+	                        _react2.default.createElement(
+	                            "tr",
+	                            null,
+	                            _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                "Id"
+	                            ),
+	                            _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                "Transaction Type"
+	                            ),
+	                            _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                "Amount"
+	                            ),
+	                            _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                "From Account"
+	                            ),
+	                            _react2.default.createElement(
+	                                "th",
+	                                null,
+	                                "To Account"
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            "tbody",
+	                            null,
+	                            (account.transactions || []).map(function (transaction) {
+	                                var withdrawal = transaction.accountFrom && transaction.accountFrom.id === account.id;
+	                                return _react2.default.createElement(
+	                                    "tr",
+	                                    { className: "transaction", key: transaction.id, style: withdrawal ? { color: "red" } : { color: "blue" } },
+	                                    _react2.default.createElement(
+	                                        "td",
+	                                        null,
+	                                        transaction.id
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "td",
+	                                        null,
+	                                        transaction.transactionType
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "td",
+	                                        null,
+	                                        transaction.amount
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "td",
+	                                        null,
+	                                        transaction.accountFrom && transaction.accountFrom.name
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        "td",
+	                                        null,
+	                                        transaction.accountTo && transaction.accountTo.name
+	                                    )
+	                                );
+	                            })
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Account;
+	}(_react2.default.Component);
+
+	;
+
+	Account.propTypes = {
+	    account: _react2.default.PropTypes.object.isRequired
+	};
+
+	exports.default = Account;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -41610,13 +41895,13 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _reducer = __webpack_require__(284);
+	var _reducer = __webpack_require__(286);
 
 	var reducers = _interopRequireWildcard(_reducer);
 
 	var _redux = __webpack_require__(172);
 
-	var _reduxThunk = __webpack_require__(286);
+	var _reduxThunk = __webpack_require__(288);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -41631,16 +41916,16 @@
 	exports.default = store;
 
 /***/ },
-/* 284 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _immutable = __webpack_require__(285);
+	var _immutable = __webpack_require__(287);
 
 	var _immutable2 = _interopRequireDefault(_immutable);
 
@@ -41691,7 +41976,7 @@
 	};
 
 /***/ },
-/* 285 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46656,7 +46941,7 @@
 	}));
 
 /***/ },
-/* 286 */
+/* 288 */
 /***/ function(module, exports) {
 
 	'use strict';

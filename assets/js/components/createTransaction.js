@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from 'classnames';
 
 
 class CreateTransaction extends React.Component{
@@ -6,11 +7,16 @@ class CreateTransaction extends React.Component{
         super(props);
         this.state = {
             error: "",
+            accountFrom: null,
+            accountTo: null
         };
         this.create = this.create.bind(this);
+        this.setAccountFrom = this.setAccountFrom.bind(this);
+        this.setAccountTo = this.setAccountTo.bind(this);
     }
 
     render() {
+        const menuData = {fontSize: 12};
         const that = this;
         return (
             <form className="half" style={{margin: "auto"}}>
@@ -57,31 +63,73 @@ class CreateTransaction extends React.Component{
                                 }
                             </select>
                         </label>
-                        <label> Account From:
-                            <select className="transaction-account-from" ref={(ref) => that.accountFrom = ref}>
-                                <option value="">Account From</option>
+                        <label className="transaction-account-from">
+                            Account From:
+                            <ul className="c-menu c-menu--high">
+                                <li
+                                    className={classNames(
+                                        "c-menu__item",
+                                        "account-from-option",
+                                        { "c-menu__item--active": !this.state.accountFrom}
+                                    )}
+                                    onClick={this.setAccountFrom}>
+                                    <div style={menuData}>Select None</div>
+                                </li>
                                 {
                                     this.props.accounts.map((account) => {
                                         return (
-                                            <option key={account.id} value={account.id}>
-                                                id-{account.id} ::: name-{account.name} ::: balance-{account.balance}
-                                            </option>
+                                            <li
+                                                className={classNames(
+                                                    "c-menu__item",
+                                                    "account-from-option",
+                                                    { "c-menu__item--active": this.state.accountFrom === account.id }
+                                                )}
+                                                key={account.id}
+                                                value={account.id}
+                                                onClick={this.setAccountFrom}>
+                                                <div style={menuData}>Account Number: {account.id}</div>
+                                                <div style={menuData}>Name: {account.name}</div>
+                                                <div style={menuData}>Balance: ${account.balance}</div>
+                                                <div style={menuData}>Owner: {account.user.username}</div>
+                                            </li>
                                         );
                                     })
                                 }
-                            </select>
+                            </ul>
                         </label>
-                        <label> Account To:
-                            <select className="transaction-account-to" ref={(ref) => that.accountTo = ref}>
-                                <option value="">Account To</option>
+                        <label className="transaction-account-to">
+                            Account To:
+                            <ul className="c-menu c-menu--high">
+                                <li
+                                    className={classNames(
+                                        "c-menu__item",
+                                        "account-to-option",
+                                        { "c-menu__item--active": !this.state.accountTo}
+                                    )}
+                                    onClick={this.setAccountTo}>
+                                    <div style={menuData}>Select None</div>
+                                </li>
                                 {
                                     this.props.accounts.map((account) => {
-                                        return <option key={account.id} value={account.id}>
-                                            id-{account.id} ::: name-{account.name} ::: balance-{account.balance}
-                                        </option>;
+                                        return (
+                                            <li
+                                                className={classNames(
+                                                    "c-menu__item",
+                                                    "account-to-option",
+                                                    { "c-menu__item--active": this.state.accountTo === account.id }
+                                                )}
+                                                key={account.id}
+                                                value={account.id}
+                                                onClick={this.setAccountTo}>
+                                                <div style={menuData}>Account Number: {account.id}</div>
+                                                <div style={menuData}>Name: {account.name}</div>
+                                                <div style={menuData}>Balance: ${account.balance}</div>
+                                                <div style={menuData}>Owner: {account.user.username}</div>
+                                            </li>
+                                        );
                                     })
                                 }
-                            </select>
+                            </ul>
                         </label>
                         <label>Amount: <input
                             required
@@ -101,11 +149,19 @@ class CreateTransaction extends React.Component{
         );
     }
 
+    setAccountFrom(event) {
+        this.setState({accountFrom: event.currentTarget.value});
+    }
+
+    setAccountTo(event) {
+        this.setState({accountTo: event.currentTarget.value});
+    }
+
     create() {
         const data = {
             amount: this.amount.value,
-            accountFrom: this.accountFrom.value ? this.accountFrom.value : null,
-            accountTo: this.accountTo.value ? this.accountTo.value : null,
+            accountFrom: this.state.accountFrom ? this.state.accountFrom : null,
+            accountTo: this.state.accountTo ? this.state.accountTo : null,
             transactionType: this.type.value,
         };
         this.props.createTransaction(data);

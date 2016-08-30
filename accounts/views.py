@@ -53,7 +53,6 @@ def detail(request, account_id):
     if request.user.is_anonymous:
         return JsonResponse([], status=404, safe=False)
     try:
-        print(teller_permission(request.user))
         if teller_permission(request.user):
             account = Account.objects.get(pk=account_id)
         else:
