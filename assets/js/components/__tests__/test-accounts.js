@@ -115,12 +115,22 @@ describe("Accounts", function() {
                 component,
                 "filter-accounts-button"
             );
+            button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            expect(button.disabled).to.not.be.ok;
             TestUtils.Simulate.click(button);
             accounts = TestUtils.scryRenderedDOMComponentsWithClass(
                 component,
                 "account"
             );
             expect(accounts.length).to.equal(1);
+            button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            expect(button.disabled).to.be.ok;
         });
 
         it("should render create if teller", function() {

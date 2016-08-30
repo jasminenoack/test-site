@@ -125,4 +125,4 @@ Managers can also create tellers and managers
 Lists the user stories that I was implmenting as well as additional features I am working on.
 
 ## Style
-The styling is done with picnic css
+The styling is done with picnic and blaze

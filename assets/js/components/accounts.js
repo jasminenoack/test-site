@@ -19,7 +19,8 @@ export class Accounts extends React.Component{
                 this.filter.value,
                 this.props.accounts
             ),
-            filter: this.filter.value
+            filter: this.filter.value,
+            changed: false
         });
     }
 

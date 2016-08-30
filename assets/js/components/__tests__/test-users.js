@@ -20,8 +20,8 @@ describe("Users", function() {
                 <Users
                     userData={{isTeller: false}}
                     users={[
-                        {"username": "mazmine", "firstName": "Jasmine", "id": 5, "accounts": [], "isTeller": false, "isManager": false, "lastName": "Noack"},
-                        {"username": "username", "firstName": "frank", "id": 4, "accounts": [], "isTeller": false, "isManager": false, "lastName": "sam"}
+                        {"username": "mazmine", "firstName": "Jasmine", "id": 5, "accounts": [], "isTeller": true, "isManager": false, "lastName": "Noack"},
+                        {"username": "username", "firstName": "frank", "id": 4, "accounts": [], "isTeller": true, "isManager": true, "lastName": "sam"}
                     ]}/>
             );
         });
