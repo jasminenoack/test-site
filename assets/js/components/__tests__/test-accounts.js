@@ -1,4 +1,5 @@
 jest.dontMock("../accounts");
+jest.dontMock("../../utils");
 
 describe("Accounts", function() {
     let React;
@@ -58,6 +59,68 @@ describe("Accounts", function() {
                 "create-transaction"
             );
             expect(button).to.be.ok;
+        });
+
+        it("should render filter", function() {
+            expect(component).to.be.ok;
+            const input = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts"
+            );
+            expect(input).to.be.ok;
+        });
+
+        it("should render make button clickable on change", function() {
+            expect(component).to.be.ok;
+            let button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            expect(button.disabled).to.be.ok;
+            const input = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts"
+            );
+            input.value = "change";
+            TestUtils.Simulate.change(input);
+            button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            expect(button.disabled).not.to.be.ok;
+        });
+
+        it("should call filter", function() {
+            expect(component).to.be.ok;
+            const input = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts"
+            );
+            input.value="change";
+            TestUtils.Simulate.change(input);
+            let button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            TestUtils.Simulate.click(button);
+            let accounts = TestUtils.scryRenderedDOMComponentsWithClass(
+                component,
+                "account"
+            );
+            expect(accounts.length).to.equal(0);
+
+            input.value="Jasmine";
+            TestUtils.Simulate.change(input);
+            button = TestUtils.findRenderedDOMComponentWithClass(
+                component,
+                "filter-accounts-button"
+            );
+            TestUtils.Simulate.click(button);
+            accounts = TestUtils.scryRenderedDOMComponentsWithClass(
+                component,
+                "account"
+            );
+            expect(accounts.length).to.equal(1);
         });
 
         it("should render create if teller", function() {

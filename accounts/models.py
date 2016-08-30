@@ -57,9 +57,10 @@ class Account(models.Model):
 
 
     def __str__(self):
-        return "{username}:{0:.2f}".format(
+        return "{id}:{name}:{0:.2f}".format(
             self.balance,
-            username=self.user.username
+            id=self.id,
+            name=self.name
         )
 
     def full_clean(self, *args, **kwargs):

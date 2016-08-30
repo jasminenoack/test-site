@@ -66,7 +66,7 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _configureStore = __webpack_require__(285);
+	var _configureStore = __webpack_require__(286);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -29224,19 +29224,19 @@
 
 	var _accounts2 = _interopRequireDefault(_accounts);
 
-	var _createAccount = __webpack_require__(280);
+	var _createAccount = __webpack_require__(281);
 
 	var _createAccount2 = _interopRequireDefault(_createAccount);
 
-	var _users = __webpack_require__(281);
+	var _users = __webpack_require__(282);
 
 	var _users2 = _interopRequireDefault(_users);
 
-	var _createTransaction = __webpack_require__(282);
+	var _createTransaction = __webpack_require__(283);
 
 	var _createTransaction2 = _interopRequireDefault(_createTransaction);
 
-	var _account = __webpack_require__(284);
+	var _account = __webpack_require__(285);
 
 	var _account2 = _interopRequireDefault(_account);
 
@@ -40924,6 +40924,8 @@
 
 	var _reactRouter = __webpack_require__(200);
 
+	var _utils = __webpack_require__(280);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -40935,15 +40937,43 @@
 	var Accounts = exports.Accounts = function (_React$Component) {
 	    _inherits(Accounts, _React$Component);
 
-	    function Accounts() {
+	    function Accounts(props) {
 	        _classCallCheck(this, Accounts);
 
-	        return _possibleConstructorReturn(this, (Accounts.__proto__ || Object.getPrototypeOf(Accounts)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Accounts.__proto__ || Object.getPrototypeOf(Accounts)).call(this, props));
+
+	        _this.state = {
+	            filteredAccounts: _this.props.accounts || [],
+	            changed: false,
+	            filter: ""
+	        };
+	        _this.filterAccounts = _this.filterAccounts.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Accounts, [{
+	        key: "filterAccounts",
+	        value: function filterAccounts() {
+	            this.setState({
+	                filteredAccounts: (0, _utils.matchAccounts)(this.filter.value, this.props.accounts),
+	                filter: this.filter.value
+	            });
+	        }
+	    }, {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps(nextProps) {
+	            if (nextProps.accounts) {
+	                this.setState({
+	                    filteredAccounts: (0, _utils.matchAccounts)(this.state.filter, nextProps.accounts)
+	                });
+	            }
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
+	            var that = this;
 	            return _react2.default.createElement(
 	                "div",
 	                {
@@ -40953,7 +40983,9 @@
 	                    "h1",
 	                    null,
 	                    this.props.userData.isTeller ? "All" : "Your",
-	                    " Accounts:"
+	                    " Accounts(Total ",
+	                    this.state.filteredAccounts.length,
+	                    "):"
 	                ),
 	                this.props.userData.isTeller ? _react2.default.createElement(
 	                    _reactRouter.Link,
@@ -40965,7 +40997,33 @@
 	                    { to: "/create/transaction", className: "create-transaction pseudo button" },
 	                    "Create Transaction"
 	                ),
-	                this.props.accounts.map(function (account) {
+	                _react2.default.createElement(
+	                    "div",
+	                    { style: { position: "relative" } },
+	                    _react2.default.createElement("input", {
+	                        ref: function ref(_ref) {
+	                            return _this2.filter = _ref;
+	                        },
+	                        onChange: function onChange() {
+	                            that.setState({ changed: true });
+	                        },
+	                        className: "c-field c-field--success filter-accounts",
+	                        type: "text",
+	                        style: { width: "calc(100% - 150px)" },
+	                        placeholder: "Account Name, Account #, Username"
+	                    }),
+	                    _react2.default.createElement(
+	                        "button",
+	                        {
+	                            style: { float: "right", position: "absolute", top: 0, right: 0, margin: 0 },
+	                            disabled: !this.state.changed,
+	                            className: "c-button--secondary filter-accounts-button",
+	                            onClick: this.filterAccounts
+	                        },
+	                        "Filter Accounts"
+	                    )
+	                ),
+	                this.state.filteredAccounts.map(function (account) {
 	                    return _react2.default.createElement(
 	                        _reactRouter.Link,
 	                        { to: "/view/accounts/" + account.id, key: account.id },
@@ -41069,6 +41127,21 @@
 
 /***/ },
 /* 280 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var matchAccounts = exports.matchAccounts = function matchAccounts(filter, accounts) {
+	    return accounts.filter(function (account) {
+	        return account.user.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1 || account.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 || (account.id + "").toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+	    });
+	};
+
+/***/ },
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41251,7 +41324,7 @@
 	exports.default = CreateAccount;
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41374,7 +41447,7 @@
 	exports.default = Users;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41389,7 +41462,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(283);
+	var _classnames = __webpack_require__(284);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -41655,7 +41728,7 @@
 	exports.default = CreateTransaction;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -41709,7 +41782,7 @@
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41884,7 +41957,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41895,13 +41968,13 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _reducer = __webpack_require__(286);
+	var _reducer = __webpack_require__(287);
 
 	var reducers = _interopRequireWildcard(_reducer);
 
 	var _redux = __webpack_require__(172);
 
-	var _reduxThunk = __webpack_require__(288);
+	var _reduxThunk = __webpack_require__(289);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -41916,7 +41989,7 @@
 	exports.default = store;
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41925,7 +41998,7 @@
 	    value: true
 	});
 
-	var _immutable = __webpack_require__(287);
+	var _immutable = __webpack_require__(288);
 
 	var _immutable2 = _interopRequireDefault(_immutable);
 
@@ -41976,7 +42049,7 @@
 	};
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46941,7 +47014,7 @@
 	}));
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports) {
 
 	'use strict';

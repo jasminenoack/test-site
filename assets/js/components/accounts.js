@@ -1,13 +1,46 @@
 import React from "react";
 import {Link} from "react-router";
+import {matchAccounts} from "../utils";
 
 export class Accounts extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            filteredAccounts: this.props.accounts || [],
+            changed: false,
+            filter: ""
+        };
+        this.filterAccounts = this.filterAccounts.bind(this);
+    }
+
+    filterAccounts() {
+        this.setState({
+            filteredAccounts: matchAccounts(
+                this.filter.value,
+                this.props.accounts
+            ),
+            filter: this.filter.value
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.accounts) {
+            this.setState({
+                filteredAccounts: matchAccounts(
+                    this.state.filter,
+                    nextProps.accounts
+                ),
+            });
+        }
+    }
+
     render() {
+        const that = this;
         return (
             <div
                 style={{minWidth: 400, margin: "auto", textAlign: "center"}}
                 className="half">
-                <h1>{this.props.userData.isTeller ? "All" : "Your"} Accounts:</h1>
+                <h1>{this.props.userData.isTeller ? "All" : "Your"} Accounts(Total {this.state.filteredAccounts.length}):</h1>
                 {
                     this.props.userData.isTeller
                     ?
@@ -19,8 +52,28 @@ export class Accounts extends React.Component{
                 <Link to="/create/transaction" className="create-transaction pseudo button">
                     Create Transaction
                 </Link>
+
+                <div style={{position: "relative"}}>
+                    <input
+                        ref={(ref) => this.filter = ref}
+                        onChange={() => {that.setState({changed: true});}}
+                        className="c-field c-field--success filter-accounts"
+                        type="text"
+                        style={{width: "calc(100% - 150px)"}}
+                        placeholder="Account Name, Account #, Username"
+                    />
+                    <button
+                        style={{float: "right", position: "absolute", top: 0, right: 0, margin: 0}}
+                        disabled={!this.state.changed}
+                        className="c-button--secondary filter-accounts-button"
+                        onClick={this.filterAccounts}
+                    >
+                        Filter Accounts
+                    </button>
+                </div>
+
                 {
-                    this.props.accounts.map((account) => {
+                    this.state.filteredAccounts.map((account) => {
                         return (
                             <Link to={`/view/accounts/${account.id}`} key={account.id}>
                                 <article className="card account">

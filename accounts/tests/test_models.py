@@ -21,7 +21,7 @@ class AccountTest(TestCase):
             name="John's private account",
             creator=user
         )
-        self.assertEqual(str(account), "john:1000.00")
+        self.assertEqual(str(account), "{}:John's private account:1000.00".format(account.id))
 
     def test_a_user_can_have_many_accounts(self):
         user = User.objects.create_user(
